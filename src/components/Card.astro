@@ -2,10 +2,6 @@
 //src/components/Card.astro
 const {name, position, aboutMe, linkedin, github, cvLink, profileImage } = Astro.props;
 
-// convert newlines to <br/> while preserving any existing HTML (like mailto links)
-// also replace literal "\n" sequences (backslash + n) in case the string contains them
-const aboutHtml = aboutMe ? aboutMe.replace(/\r\n|\r|\n|\\n/g, '<br/>') : '';
-
 import '../styles/card.css';
 ---
 
@@ -14,7 +10,7 @@ import '../styles/card.css';
         <div class="descripcion">
             <h1>{name}</h1>
             <h2>{position}</h2>
-            <p>{@html aboutHtml}</p>
+            <p>{aboutMe}</p>
             <div class="icons">
                 <a href={linkedin} class="hover-text" target="_blank">
                     <span class="tooltip-text" id="fade">
