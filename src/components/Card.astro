@@ -5,7 +5,7 @@ import '../styles/card.css';
 ---
 
 <div class="container">
-    <div class="card-container">
+    <div class="card-container" id="tilt-card">
         <div class="descripcion">
             <h1>{name}</h1>
             <h2>{position}</h2>
@@ -54,6 +54,42 @@ import '../styles/card.css';
 </div>
 
 <script>
+  // --- 1. THE 3D TILT LOGIC ---
+  const card = document.getElementById('tilt-card');
+  const container = document.querySelector('.container');
+
+  if (card && container) {
+    // We use a standard function(e) here to avoid strict type checks
+    container.addEventListener('mousemove', function(e) {
+      const rect = container.getBoundingClientRect();
+      
+      // Calculate mouse position
+      // We use 'as any' or just standard JS to bypass the red lines
+      const x = (e as any).clientX - rect.left;
+      const y = (e as any).clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      // Tilt sensitivity (25 is a good balance)
+      const rotateX = (centerY - y) / 25; 
+      const rotateY = (x - centerX) / 25;
+
+      // Apply the transformation safely
+      if (card) {
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      }
+    });
+
+    // Smooth reset when mouse leaves
+    container.addEventListener('mouseleave', () => {
+      if (card) {
+        card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+      }
+    });
+  }
+
+  // --- 2. THE CLICK TO COPY LOGIC ---
   const copyBtn = document.querySelector('.copy-email-btn');
   const tooltip = document.getElementById('copy-tooltip');
 
