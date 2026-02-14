@@ -1,0 +1,81 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="404: Page Not Found" description="The page you are looking for does not exist.">
+    <div class="error-container">
+        <div class="error-content">
+            <h1 class="error-code">404</h1>
+            <div class="terminal-box">
+                <p class="terminal-text">> system_error: PAGE_NOT_FOUND</p>
+                <p class="terminal-text">> status: Looking for something that isn't here.</p>
+                <p class="terminal-text">> action: Recommended user return to home base.</p>
+            </div>
+            <a href="/" class="back-home-btn">
+                <i class="bi bi-house-door-fill"></i> Return Home
+            </a>
+        </div>
+    </div>
+</BaseLayout>
+
+<style>
+    .error-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+        background-color: #131516;
+        color: white;
+        font-family: 'Lato', sans-serif;
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .error-code {
+        font-size: 8rem;
+        margin: 0;
+        background: linear-gradient(to right, #024945, #12a89c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    .terminal-box {
+        background-color: #1c1f20;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+        border-left: 4px solid #12a89c;
+        max-width: 450px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .terminal-text {
+        color: #12a89c;
+        margin: 5px 0;
+        font-size: 0.9rem;
+    }
+
+    .back-home-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 25px;
+        background: linear-gradient(to right, #024945, #12a89c);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    .back-home-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(18, 168, 156, 0.3);
+    }
+
+    @media (max-width: 576px) {
+        .error-code { font-size: 5rem; }
+        .terminal-text { font-size: 0.8rem; }
+    }
+</style>

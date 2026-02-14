@@ -1,12 +1,11 @@
-/* CSS CARD */
 /* IMAGE */
-.image{
+.image {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.image img{
+.image img {
     width: 200px;
     height: 200px;
     border-radius: 100%;
@@ -16,142 +15,108 @@
 }
 
 /* CONTAINER */
-.container{
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #131516;
     font-family: 'Lato', sans-serif;
     padding: 0 25px;
 }
 
 /* CARD */
-.card-container{
+.card-container {
     display: flex;
     width: 650px;
     height: auto;
-    background: linear-gradient(to right,#024945, #12a89c); /* #2FEBD4, #DEFFFD*/
+    background: linear-gradient(to right, #024945, #12a89c);
     border-radius: 12px;
     box-shadow: 1px 7px 10px 2px rgba(0, 0, 0, .15);
 }
 
-.descripcion{
+.descripcion {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-.image, .descripcion{
+.image, .descripcion {
     padding: 30px;
     text-align: left;
     color: #FFFFFF;
 }
 
-.descripcion h2{
-    line-height: 2;
-    font-weight: 500;
-    font-size: medium;
-}
+.descripcion h1 { font-weight: 400; margin-bottom: 0; }
+.descripcion h2 { line-height: 2; font-weight: 500; font-size: medium; margin-top: 0; }
+.descripcion p { font-weight: 300; font-size: 17px; }
 
-.descripcion p{
-    font-weight: 300;
-    font-size: 17px;
-}
-
-.descripcion h1{
-    font-weight: 400;
-}
-
-/* ICONS */
-.descripcion .icons{
+/* ICONS SECTION */
+.descripcion .icons {
     margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.descripcion .icons a{
+
+/* TARGET BOTH LINKS AND COPY BUTTON */
+.descripcion .icons a, 
+.descripcion .icons .copy-email-btn {
     display: inline-block;
-    margin: 0 30px 0 30px;
+    margin: 0 15px;
     color: #FFFFFF;
     font-size: 30px;
     transition: .3s;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
 }
-a:hover{
+
+.descripcion .icons a:hover,
+.descripcion .icons .copy-email-btn:hover {
     transform: translateY(-3px) scale(1.05);
 }
 
-/* TOOLTIP */
+/* TOOLTIP - CENTERED LOGIC */
 .tooltip-text {
     position: absolute;
-    top: -25px;
-    left: -115%;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 2;
-    width: 100px;
+    padding: 5px 10px;
     color: white;
     font-size: 12px;
     background-color: #192733;
     border-radius: 10px;
-    padding: 5px 10px 5px 10px;
+    white-space: nowrap;
+    pointer-events: none;
 }
-#fade {
+
+#fade, #copy-tooltip {
     opacity: 0;
     transition: opacity 0.3s;
 }
-.hover-text:hover #fade { opacity: 1; }
-.hover-text {
-    position: relative;
-    display: inline-block;
-    margin: 10px;
-    font-family: 'Lato', sans-serif;
-    font-weight: 200;
-    text-align: center;
+
+.hover-text:hover #fade,
+.hover-text:hover #copy-tooltip {
+    opacity: 1;
 }
 
 /* RESPONSIVE */
-@media (max-width: 576px){
-    .container{
-        height: 100vh;
-        padding: 0 15px;
-    }
-    .card-container{
-        display: flex;
+@media (max-width: 576px) {
+    .container { padding: 0 15px; }
+    .card-container {
         flex-direction: column-reverse;
         background: linear-gradient(#12a89c, #024945);
-        width: 750px;
-        margin-top: 12px;
-        margin-bottom: 12px;
+        width: 100%;
+        max-width: 400px;
     }
-    .image img{
-        width: 90px;
-        height: 90px;
-    }
-    .image{
-        padding: 15px 0 0 0;
-    }
-    .descripcion{
-        padding: 10px 20px 18px 20px;
-    }
-    .descripcion h1{
-        font-weight: 400;
-        font-size: 25px;
-    }
-    .descripcion h2{
-        line-height: 2;
-        font-weight: 500;
-        font-size: 17px;
-    }
-    .descripcion p{
-        font-weight: 300;
-        font-size: 15px;
-    }
-    .descripcion .icons{
-        margin-top: 18px;
-    }
-}
-@media (min-width: 320px){
-    .icons{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
+    .image img { width: 90px; height: 90px; }
+    .image { padding: 15px 0 0 0; }
+    .descripcion { padding: 10px 20px 18px 20px; }
+    .descripcion h1 { font-size: 25px; }
+    .descripcion .icons { margin-top: 18px; flex-wrap: wrap; }
+    .descripcion .icons a, .descripcion .icons .copy-email-btn { margin: 10px; }
 }
