@@ -31,23 +31,32 @@
 }
 
 /* CARD */
+/* Update your .card-container to include a solid background and overflow fix */
 .card-container {
-  /* ... your other styles ... */
-  
-  /* Change 0.1s to 0.4s and use cubic-bezier for that "slow-mo" elastic feel */
-  transition: transform 0.4s cubic-bezier(0.03, 0.98, 0.52, 0.99);
-  
-  /* This ensures the card doesn't "jump" when the mouse enters */
-  transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    display: flex;
+    width: 650px;
+    height: auto;
+    /* Ensure the background is solid so translateZ doesn't make it transparent */
+    background: linear-gradient(to right, #024945, #12a89c) !important; 
+    border-radius: 12px;
+    box-shadow: 1px 7px 25px 2px rgba(0, 0, 0, .3);
+    
+    /* 3D Essentials */
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.1, 0.5, 0.3, 1);
+    will-change: transform;
+    
+    /* This fixes the "invisible background" glitch */
+    backface-visibility: hidden; 
 }
 
-.descripcion {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* This makes text pop out */
-    transform: translateZ(30px);
+/* Update .descripcion and .image to NOT use translateZ if it's breaking the layout */
+.descripcion, .image {
+    padding: 30px;
+    text-align: left;
+    color: #FFFFFF;
+    /* Remove translateZ for a second to see if the layout fixes itself */
+    transform: translateZ(1px); 
 }
 
 .image, .descripcion {
