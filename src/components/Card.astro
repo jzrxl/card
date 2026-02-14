@@ -5,40 +5,12 @@ import '../styles/card.css';
 ---
 
 <div class="container">
-    <div class="card-container" id="tilt-card">
+    <div class="card-container">
         <div class="descripcion">
             <h1>{name}</h1>
             <h2>{position}</h2>
             <p set:html={aboutMe}></p>
             <div class="icons">
-                {facebook && (
-                    <a href={facebook} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">Facebook</span>
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                )}
-
-                {github && (
-                    <a href={github} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">GitHub</span>
-                        <i class="bi bi-github"></i>
-                    </a>
-                )}
-
-                {linkedin && (
-                    <a href={linkedin} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">LinkedIn</span>
-                        <i class="bi bi-linkedin"></i>
-                    </a>
-                )}
-
-                {cvLink && (
-                    <a href={cvLink} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">Resume</span>
-                        <i class="bi bi-file-earmark-arrow-down"></i>
-                    </a>
-                )}
-
                 {email && (
                     <div class="hover-text copy-email-btn" data-email={email}>
                         <span class="tooltip-text" id="copy-tooltip">Click to Copy</span>
@@ -54,12 +26,10 @@ import '../styles/card.css';
 </div>
 
 <script>
-  // --- CLICK TO COPY LOGIC ---
   function initCopyEmail() {
     const copyBtn = document.querySelector('.copy-email-btn');
     const tooltip = document.getElementById('copy-tooltip');
 
-    // "instanceof HTMLElement" tells the editor: "Trust me, this is a tag that has an onclick"
     if (copyBtn instanceof HTMLElement && tooltip) {
       copyBtn.addEventListener('click', () => {
         const email = copyBtn.getAttribute('data-email');
@@ -68,22 +38,16 @@ import '../styles/card.css';
             const originalText = tooltip.innerText;
             tooltip.innerText = "Copied!";
             tooltip.style.opacity = "1";
-            
             setTimeout(() => {
               tooltip.innerText = originalText;
               tooltip.style.opacity = "";
             }, 2000);
-          }).catch(err => {
-            console.error('Could not copy email: ', err);
           });
         }
       });
     }
   }
 
-  // Initialize on load
   initCopyEmail();
-  
-  // Re-initialize for Astro View Transitions compatibility
   document.addEventListener('astro:after-swap', initCopyEmail);
 </script>

@@ -1,20 +1,55 @@
+/* THE STARS BACKGROUND */
+.container {
+    position: relative;
+    overflow: hidden; /* Keeps stars inside the screen */
+    background-color: #0b0d0e; /* Slightly darker for better star contrast */
+}
+
+/* Create the star layer */
+.container::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0.3;
+    transition: transform 1.5s ease-out; /* The "slow motion" movement */
+    z-index: 0;
+}
+
+/* When hovering anywhere in the container, the stars drift away */
+.container:hover::before {
+    transform: scale(1.1) translate(-20px, -20px);
+}
+
+/* Ensure the card stays on top of the stars */
+.card-container {
+    position: relative;
+    z-index: 1;
+}
+
 /* IMAGE */
 .image {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* This makes the image "pop" out toward the user */
-    transform: translateZ(40px);
 }
 
 .image img {
     width: 200px;
     height: 200px;
     border-radius: 100%;
-    text-align: center;
     object-fit: cover;
     object-position: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
 /* CONTAINER */
@@ -26,43 +61,30 @@
     background-color: #131516;
     font-family: 'Lato', sans-serif;
     padding: 0 25px;
-    /* Added perspective for 3D depth */
-    perspective: 1000px;
 }
 
 /* CARD */
-/* Update your .card-container to include a solid background and overflow fix */
 .card-container {
     display: flex;
     width: 650px;
     height: auto;
-    /* Ensure the background is solid so translateZ doesn't make it transparent */
-    background: linear-gradient(to right, #024945, #12a89c) !important; 
+    background: linear-gradient(to right, #024945, #12a89c);
     border-radius: 12px;
-    box-shadow: 1px 7px 25px 2px rgba(0, 0, 0, .3);
-    
-    /* 3D Essentials */
-    transform-style: preserve-3d;
-    transition: transform 0.4s cubic-bezier(0.1, 0.5, 0.3, 1);
-    will-change: transform;
-    
-    /* This fixes the "invisible background" glitch */
-    backface-visibility: hidden; 
+    box-shadow: 1px 7px 10px 2px rgba(0, 0, 0, .15);
 }
 
-/* Update .descripcion and .image to NOT use translateZ if it's breaking the layout */
-.descripcion, .image {
+.descripcion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     padding: 30px;
     text-align: left;
     color: #FFFFFF;
-    /* Remove translateZ for a second to see if the layout fixes itself */
-    transform: translateZ(1px); 
 }
 
-.image, .descripcion {
+.image {
     padding: 30px;
-    text-align: left;
-    color: #FFFFFF;
 }
 
 .descripcion h1 { font-weight: 400; margin-bottom: 0; }
@@ -75,11 +97,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Keeps icons on a different 3D plane */
-    transform: translateZ(50px);
 }
 
-/* TARGET BOTH LINKS AND COPY BUTTON */
 .descripcion .icons a, 
 .descripcion .icons .copy-email-btn {
     display: inline-block;
@@ -94,16 +113,16 @@
 
 .descripcion .icons a:hover,
 .descripcion .icons .copy-email-btn:hover {
-    transform: translateY(-3px) scale(1.1);
+    transform: translateY(-3px) scale(1.05);
 }
 
-/* TOOLTIP - CENTERED LOGIC */
+/* TOOLTIP */
 .tooltip-text {
     position: absolute;
     top: -35px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10;
+    z-index: 2;
     padding: 5px 10px;
     color: white;
     font-size: 12px;
@@ -136,6 +155,4 @@
     .image { padding: 15px 0 0 0; }
     .descripcion { padding: 10px 20px 18px 20px; }
     .descripcion h1 { font-size: 25px; }
-    .descripcion .icons { margin-top: 18px; flex-wrap: wrap; }
-    .descripcion .icons a, .descripcion .icons .copy-email-btn { margin: 10px; }
 }
