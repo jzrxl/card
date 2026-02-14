@@ -54,38 +54,32 @@ import '../styles/card.css';
 </div>
 
 <script>
-  // --- 1. THE 3D TILT LOGIC ---
+  // --- 1. THE REFINED 3D TILT LOGIC (Slow-Mo Edition) ---
   const card = document.getElementById('tilt-card');
-  const container = document.querySelector('.container');
 
-  if (card && container) {
-    // We use a standard function(e) here to avoid strict type checks
-    container.addEventListener('mousemove', function(e) {
-      const rect = container.getBoundingClientRect();
+  if (card) {
+    // We listen to the card itself for a smoother experience
+    card.addEventListener('mousemove', (e: any) => {
+      const rect = card.getBoundingClientRect();
       
-      // Calculate mouse position
-      // We use 'as any' or just standard JS to bypass the red lines
-      const x = (e as any).clientX - rect.left;
-      const y = (e as any).clientY - rect.top;
+      // Calculate mouse position relative to the CARD center
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       
-      // Tilt sensitivity (25 is a good balance)
-      const rotateX = (centerY - y) / 25; 
-      const rotateY = (x - centerX) / 25;
+      // Increased the divisor to 40 for a much gentler, premium tilt
+      const rotateX = (centerY - y) / 40; 
+      const rotateY = (x - centerX) / 40;
 
-      // Apply the transformation safely
-      if (card) {
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      }
+      // perspective(1000px) is vital for the 3D look
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
     });
 
-    // Smooth reset when mouse leaves
-    container.addEventListener('mouseleave', () => {
-      if (card) {
-        card.style.transform = `rotateX(0deg) rotateY(0deg)`;
-      }
+    // Reset rotation smoothly when mouse leaves
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
     });
   }
 

@@ -3,6 +3,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* This makes the image "pop" out toward the user */
+    transform: translateZ(40px);
 }
 
 .image img {
@@ -12,6 +14,7 @@
     text-align: center;
     object-fit: cover;
     object-position: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
 /* CONTAINER */
@@ -23,16 +26,19 @@
     background-color: #131516;
     font-family: 'Lato', sans-serif;
     padding: 0 25px;
+    /* Added perspective for 3D depth */
+    perspective: 1000px;
 }
 
 /* CARD */
 .card-container {
-    display: flex;
-    width: 650px;
-    height: auto;
-    background: linear-gradient(to right, #024945, #12a89c);
-    border-radius: 12px;
-    box-shadow: 1px 7px 10px 2px rgba(0, 0, 0, .15);
+  /* ... your other styles ... */
+  
+  /* Change 0.1s to 0.4s and use cubic-bezier for that "slow-mo" elastic feel */
+  transition: transform 0.4s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+  
+  /* This ensures the card doesn't "jump" when the mouse enters */
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
 }
 
 .descripcion {
@@ -40,6 +46,8 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    /* This makes text pop out */
+    transform: translateZ(30px);
 }
 
 .image, .descripcion {
@@ -58,6 +66,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Keeps icons on a different 3D plane */
+    transform: translateZ(50px);
 }
 
 /* TARGET BOTH LINKS AND COPY BUTTON */
@@ -75,7 +85,7 @@
 
 .descripcion .icons a:hover,
 .descripcion .icons .copy-email-btn:hover {
-    transform: translateY(-3px) scale(1.05);
+    transform: translateY(-3px) scale(1.1);
 }
 
 /* TOOLTIP - CENTERED LOGIC */
@@ -84,7 +94,7 @@
     top: -35px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 2;
+    z-index: 10;
     padding: 5px 10px;
     color: white;
     font-size: 12px;
