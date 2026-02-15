@@ -9,6 +9,9 @@ import '../styles/card.css';
   data-website-id="723aea2c-5bef-4955-95e3-f85070987f2c"
 ></script>
 
+<div class="cursor-dot"></div>
+<div class="cursor-outline"></div>
+
 <div class="container">
     <div class="warning-wrapper">
       <div id="force-dark-warning" class="force-dark-msg">
@@ -19,9 +22,30 @@ import '../styles/card.css';
 
     <div class="card-container">
         <div class="descripcion">
-            <h1>{name}</h1>
+            <div class="name-status">
+                <h1>{name}</h1>
+                <span class="status-pulse" title="Available for work"></span>
+            </div>
             <h2>{position}</h2>
+            
             <p set:html={aboutMe}></p>
+
+            <div class="tech-stack">
+                <span class="tag">Computer Hardware</span>
+                <span class="tag">Windows Installation</span>
+                <span class="tag">Networking</span>
+                <span class="tag">Software Applications</span>
+                <span class="tag">Troubleshooting</span>
+                <span class="tag">System Configuration</span>
+                <span class="tag">Operating System</span>
+                <span class="tag">LAN Setup</span>
+                <span class="tag">Connectivity Troubleshooting</span>
+                <span class="tag">Device Setup</span>
+                <span class="tag">Performance Optimization</span>
+                <span class="tag">Technical Support</span>
+                <span class="tag">Computer Systems</span>
+                <span class="tag">Basic Hardware</span>
+            </div>
             
             <div class="icons">
                 {facebook && (
@@ -63,6 +87,7 @@ import '../styles/card.css';
 </div>
 
 <script>
+  // This block removes the red squiggles for 'umami'
   declare global {
     interface Window {
       umami: any;
@@ -70,10 +95,32 @@ import '../styles/card.css';
   }
 
   function initAll() {
-    // --- 1. COPY EMAIL LOGIC ---
+    // --- 1. CUSTOM CURSOR LOGIC ---
+    const dot = document.querySelector('.cursor-dot') as HTMLElement;
+    const outline = document.querySelector('.cursor-outline') as HTMLElement;
+    const hoverables = document.querySelectorAll('a, .copy-email-btn, #cv-download-link, button');
+
+    if (dot && outline) {
+        window.onmousemove = (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            dot.style.left = `${posX}px`;
+            dot.style.top = `${posY}px`;
+            outline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        };
+
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => outline.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => outline.classList.remove('cursor-hover'));
+        });
+    }
+
+    // --- 2. INTERACTION LOGIC ---
     const copyBtn = document.querySelector('.copy-email-btn');
     const copyTooltip = document.getElementById('copy-tooltip');
-
     if (copyBtn instanceof HTMLElement && copyTooltip) {
       copyBtn.onclick = () => {
         const email = copyBtn.getAttribute('data-email');
@@ -82,58 +129,39 @@ import '../styles/card.css';
             const originalText = copyTooltip.innerText;
             copyTooltip.innerText = "Copied!";
             copyTooltip.style.opacity = "1";
-            
-            // Umami Custom Event Tracking
             if (window.umami) window.umami.track('Email Copied');
-
-            setTimeout(() => {
-              copyTooltip.innerText = originalText;
-              copyTooltip.style.opacity = "";
-            }, 2000);
+            setTimeout(() => { copyTooltip.innerText = originalText; copyTooltip.style.opacity = ""; }, 2000);
           });
         }
       };
     }
 
-    // --- 2. CV LOADING SPINNER ---
     const cvLink = document.getElementById('cv-download-link');
     const cvTooltip = document.getElementById('cv-tooltip');
-
     if (cvLink instanceof HTMLElement && cvTooltip) {
         cvLink.onclick = () => {
             cvLink.classList.add('is-loading');
             cvTooltip.innerText = "Preparing...";
-
-            // Umami Custom Event Tracking
             if (window.umami) window.umami.track('Resume Viewed');
-
-            setTimeout(() => {
-                cvLink.classList.remove('is-loading');
-                cvTooltip.innerText = "Resume";
-            }, 2000);
+            setTimeout(() => { cvLink.classList.remove('is-loading'); cvTooltip.innerText = "Resume"; }, 2000);
         };
     }
 
     // --- 3. FORCE DARK DETECTION ---
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
-    
     if (localStorage.getItem('hideForceDarkWarning') === 'true') return;
 
     const canary = document.createElement('div');
     canary.style.backgroundColor = 'rgb(255, 255, 255)';
     canary.style.position = 'absolute';
     canary.style.opacity = '0';
-    canary.style.pointerEvents = 'none';
     document.body.appendChild(canary);
 
     setTimeout(() => {
       const computedBg = window.getComputedStyle(canary).backgroundColor;
       if (computedBg !== 'rgb(255, 255, 255)' && warning) {
         warning.style.display = 'flex';
-        warning.style.justifyContent = 'space-between';
-        
-        // Tracking force dark usage
         if (window.umami) window.umami.track('Force Dark Detected');
       }
       document.body.removeChild(canary);
@@ -147,7 +175,6 @@ import '../styles/card.css';
     }
   }
 
-  // Initialize
   initAll();
   document.addEventListener('astro:after-swap', initAll);
 </script>
