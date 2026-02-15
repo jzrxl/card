@@ -10,7 +10,7 @@ import '../styles/card.css';
 <div class="container">
     <div id="force-dark-warning" class="force-dark-msg">
       <span>⚠️ Please disable "Force Dark Mode" for the best experience.</span>
-      <button id="close-warning" class="close-btn">&times;</button>
+      <button id="close-warning" class="close-btn" aria-label="Close">&times;</button>
     </div>
 
     <div class="main-wrapper reveal">
@@ -85,6 +85,7 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
+    // 1. TYPEWRITER
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -99,11 +100,10 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
+    // 2. MOUSE LOGIC
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
-
-    // PERFORMANCE FIX: Only run mouse logic if pointer is used
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
     if (!isTouchDevice) {
@@ -120,6 +120,7 @@ import '../styles/card.css';
         };
     }
 
+    // 3. TOGGLE
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const arrow = document.getElementById('arrow-icon');
@@ -130,26 +131,35 @@ import '../styles/card.css';
         };
     }
 
+    // 4. IMPROVED DARK MODE DETECTOR
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
+    
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
+        // Create a test element with a specific bright color
         const testDiv = document.createElement('div');
-        testDiv.style.cssText = "background-color: white; position: absolute; visibility: hidden;";
+        testDiv.style.cssText = "background-color: #ffffff; color: #000000; position: fixed; top: -100px; opacity: 0;";
         document.body.appendChild(testDiv);
+        
         setTimeout(() => {
-            if (window.getComputedStyle(testDiv).backgroundColor !== 'rgb(255, 255, 255)') {
+            const style = window.getComputedStyle(testDiv);
+            // If the browser (Force Dark Mode) flipped white to dark, the bg will be dark
+            const bgColor = style.backgroundColor;
+            if (bgColor !== 'rgb(255, 255, 255)' && bgColor !== '#ffffff') {
                 warning.style.display = 'flex';
             }
             document.body.removeChild(testDiv);
-        }, 300);
-    }
-    if (closeBtn && warning) {
-        closeBtn.addEventListener('click', () => {
-            warning.style.display = 'none';
-            localStorage.setItem('hideForceDarkWarning', 'true');
-        });
+        }, 500);
     }
 
+    if (closeBtn && warning) {
+        closeBtn.onclick = () => {
+            warning.style.display = 'none';
+            localStorage.setItem('hideForceDarkWarning', 'true');
+        };
+    }
+
+    // 5. REVEAL
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
