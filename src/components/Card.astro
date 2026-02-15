@@ -20,7 +20,7 @@ import '../styles/card.css';
                 </div>
                 
                 <div class="title-container">
-                    <h2 id="typewriter-title" data-text={position}></h2>
+                    <h2 id="typewriter-title" class="typing" data-text={position}></h2>
                 </div>
                 
                 <div class="about-container">
@@ -92,18 +92,15 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    console.clear();
-    console.log("%cHey there🙋‍♂️", "font-weight:bold; font-size:24px; color:#00f2ff; text-shadow: 2px 2px 0px #00666b;");
-
     const canvas = document.getElementById('starCanvas') as HTMLCanvasElement;
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     
-    // --- Starfield with Permanent Displacement ---
+    // --- Starfield: Attraction & Elastic Home ---
     if (canvas) {
         const ctx = canvas.getContext('2d')!;
         let particles: any[] = [];
-        const mouse = { x: -1000, y: -1000, radius: 130 };
+        const mouse = { x: -1000, y: -1000, radius: 150 };
 
         const resize = () => {
             canvas.width = window.innerWidth;
@@ -112,48 +109,58 @@ import '../styles/card.css';
         };
 
         class Particle {
-            x: number; y: number; size: number; density: number;
-            vx: number; vy: number;
+            x: number; y: number; baseX: number; baseY: number;
+            size: number; density: number; vx: number; vy: number;
 
             constructor(x: number, y: number) {
                 this.x = x; this.y = y;
-                this.size = Math.random() * 1.8 + 0.3;
-                this.density = (Math.random() * 25) + 2;
-                this.vx = (Math.random() - 0.5) * 0.15;
-                this.vy = (Math.random() - 0.5) * 0.15;
+                this.baseX = x; this.baseY = y;
+                this.size = Math.random() * 1.2 + 0.2; // Tiny dots
+                this.density = (Math.random() * 15) + 1;
+                this.vx = (Math.random() - 0.5) * 0.1; // Very slow drift
+                this.vy = (Math.random() - 0.5) * 0.1;
             }
             draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
             update() {
-                // Apply constant drift
-                this.x += this.vx; this.y += this.vy;
+                // Background slow drift of the 'home' position
+                this.baseX += this.vx; this.baseY += this.vy;
+                if (this.baseX < 0) this.baseX = canvas.width;
+                if (this.baseX > canvas.width) this.baseX = 0;
+                if (this.baseY < 0) this.baseY = canvas.height;
+                if (this.baseY > canvas.height) this.baseY = 0;
 
-                // Screen wrap logic
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
-
-                // Permanent Displacement logic
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance < mouse.radius) {
+                    // ATTRACTION logic: Move toward mouse
                     let force = (mouse.radius - distance) / mouse.radius;
-                    let pushX = (dx / distance) * force * this.density;
-                    let pushY = (dy / distance) * force * this.density;
-                    this.x -= pushX;
-                    this.y -= pushY;
+                    let directionX = (dx / distance) * force * this.density;
+                    let directionY = (dy / distance) * force * this.density;
+                    this.x += directionX * 0.2; 
+                    this.y += directionY * 0.2;
+                } else {
+                    // Return slowly to Base position
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 25; // Speed of returning home
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 25;
+                    }
                 }
             }
         }
 
         function initParticles() {
             particles = [];
-            const numberOfParticles = (canvas.width * canvas.height) / 9500;
+            // Higher divisor = fewer stars
+            const numberOfParticles = (canvas.width * canvas.height) / 18000; 
             for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
             }
@@ -168,7 +175,6 @@ import '../styles/card.css';
         window.addEventListener('resize', resize);
         resize(); animate();
 
-        // Mouse Move Handler for Cursor and Stars
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX; mouse.y = e.clientY;
             if (dot && outline) {
@@ -177,7 +183,6 @@ import '../styles/card.css';
             }
         });
 
-        // Hover effect for interactive elements
         const targets = document.querySelectorAll('a, button, .social-icon, .tag');
         targets.forEach(t => {
             t.addEventListener('mouseenter', () => outline.classList.add('hovering'));
@@ -185,13 +190,18 @@ import '../styles/card.css';
         });
     }
 
-    // --- Typewriter & Toggle (Simplified for readability) ---
+    // --- Typewriter ---
     const titleEl = document.getElementById('typewriter-title');
     if (titleEl) {
         const text = titleEl.getAttribute('data-text') || "";
         titleEl.textContent = ""; 
         let i = 0;
-        function type() { if (i < text.length) { titleEl.textContent += text.charAt(i++); setTimeout(type, 85); } }
+        function type() { 
+            if (i < text.length) { 
+                titleEl.textContent += text.charAt(i++); 
+                setTimeout(type, 85); 
+            } 
+        }
         setTimeout(type, 400);
     }
 
@@ -210,12 +220,10 @@ import '../styles/card.css';
 
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
-    const ctaText = document.getElementById('cta-text');
-    if (toggleBtn && panel && ctaText) {
+    if (toggleBtn && panel) {
         toggleBtn.addEventListener('click', () => {
-            const isOpen = panel.classList.toggle('active');
+            panel.classList.toggle('active');
             toggleBtn.classList.toggle('is-open');
-            ctaText.textContent = isOpen ? "Hide my skills" : "Click to view my skills";
         });
     }
   }
