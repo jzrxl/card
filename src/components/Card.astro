@@ -10,7 +10,7 @@ import '../styles/card.css';
 <div class="container">
     <div id="force-dark-warning" class="force-dark-msg">
       <span>⚠️ Please disable "Force Dark Mode" for the best experience.</span>
-      <button id="close-warning" class="close-btn" aria-label="Close">&times;</button>
+      <button id="close-warning" class="close-btn">&times;</button>
     </div>
 
     <div class="main-wrapper reveal">
@@ -28,19 +28,34 @@ import '../styles/card.css';
                 
                 <div class="social-footer">
                     <div class="icons">
-                        {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
-                        {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
-                        {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
+                        {facebook && (
+                            <a href={facebook} class="icon-link" target="_blank" aria-label="Facebook">
+                                <i class="bi bi-facebook"></i>
+                                <span class="tooltip-text">Facebook</span>
+                            </a>
+                        )}
+                        {github && (
+                            <a href={github} class="icon-link" target="_blank" aria-label="GitHub">
+                                <i class="bi bi-github"></i>
+                                <span class="tooltip-text">GitHub</span>
+                            </a>
+                        )}
+                        {linkedin && (
+                            <a href={linkedin} class="icon-link" target="_blank" aria-label="LinkedIn">
+                                <i class="bi bi-linkedin"></i>
+                                <span class="tooltip-text">LinkedIn</span>
+                            </a>
+                        )}
                         {cvLink && (
-                            <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
-                                <span class="tooltip-text">Resume</span>
+                            <a href={cvLink} class="icon-link" target="_blank" aria-label="Download Resume">
                                 <i class="bi bi-file-earmark-arrow-down"></i>
+                                <span class="tooltip-text">Resume</span>
                             </a>
                         )}
                         {email && (
-                            <div class="hover-text copy-email-btn" data-email={email}>
-                                <span class="tooltip-text">Copy Email</span>
+                            <div class="icon-link copy-email-btn" data-email={email} role="button" aria-label="Copy Email">
                                 <i class="bi bi-envelope-at-fill"></i>
+                                <span class="tooltip-text">Copy Email</span>
                             </div>
                         )}
                     </div>
@@ -85,7 +100,6 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    // 1. TYPEWRITER
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -100,7 +114,6 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
-    // 2. MOUSE LOGIC
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
@@ -120,7 +133,6 @@ import '../styles/card.css';
         };
     }
 
-    // 3. TOGGLE
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const arrow = document.getElementById('arrow-icon');
@@ -131,27 +143,19 @@ import '../styles/card.css';
         };
     }
 
-    // 4. IMPROVED DARK MODE DETECTOR
+    // Surgical Dark Mode Check
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
-    
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
-        // Create a test element with a specific bright color
-        const testDiv = document.createElement('div');
-        testDiv.style.cssText = "background-color: #ffffff; color: #000000; position: fixed; top: -100px; opacity: 0;";
-        document.body.appendChild(testDiv);
-        
+        const test = document.createElement('div');
+        test.style.cssText = "background-color: rgb(255, 255, 255); position: fixed; top: -100px;";
+        document.body.appendChild(test);
         setTimeout(() => {
-            const style = window.getComputedStyle(testDiv);
-            // If the browser (Force Dark Mode) flipped white to dark, the bg will be dark
-            const bgColor = style.backgroundColor;
-            if (bgColor !== 'rgb(255, 255, 255)' && bgColor !== '#ffffff') {
-                warning.style.display = 'flex';
-            }
-            document.body.removeChild(testDiv);
-        }, 500);
+            const actual = window.getComputedStyle(test).backgroundColor;
+            if (actual !== 'rgb(255, 255, 255)') warning.style.display = 'flex';
+            document.body.removeChild(test);
+        }, 600);
     }
-
     if (closeBtn && warning) {
         closeBtn.onclick = () => {
             warning.style.display = 'none';
@@ -159,7 +163,6 @@ import '../styles/card.css';
         };
     }
 
-    // 5. REVEAL
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
