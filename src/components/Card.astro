@@ -96,7 +96,6 @@ import '../styles/card.css';
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     
-    // --- Starfield (Magnetic Attraction) ---
     if (canvas) {
         const ctx = canvas.getContext('2d')!;
         let particles: any[] = [];
@@ -111,7 +110,6 @@ import '../styles/card.css';
         class Particle {
             x: number; y: number; baseX: number; baseY: number;
             size: number; density: number; vx: number; vy: number;
-
             constructor(x: number, y: number) {
                 this.x = x; this.y = y;
                 this.baseX = x; this.baseY = y;
@@ -130,11 +128,9 @@ import '../styles/card.css';
                 if (this.baseX > canvas.width) this.baseX = 0;
                 if (this.baseY < 0) this.baseY = canvas.height;
                 if (this.baseY > canvas.height) this.baseY = 0;
-
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
-                
                 if (distance < mouse.radius) {
                     let force = (mouse.radius - distance) / mouse.radius;
                     let directionX = (dx / distance) * force * this.density;
@@ -142,24 +138,16 @@ import '../styles/card.css';
                     this.x += directionX * 0.2; 
                     this.y += directionY * 0.2;
                 } else {
-                    if (this.x !== this.baseX) {
-                        let dxBack = this.x - this.baseX;
-                        this.x -= dxBack / 25;
-                    }
-                    if (this.y !== this.baseY) {
-                        let dyBack = this.y - this.baseY;
-                        this.y -= dyBack / 25;
-                    }
+                    if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 25;
+                    if (this.y !== this.baseY) this.y -= (this.y - this.baseY) / 25;
                 }
             }
         }
 
         function initParticles() {
             particles = [];
-            const numberOfParticles = (canvas.width * canvas.height) / 18000; 
-            for (let i = 0; i < numberOfParticles; i++) {
-                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-            }
+            const count = (canvas.width * canvas.height) / 18000; 
+            for (let i = 0; i < count; i++) particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
         }
 
         function animate() {
@@ -178,9 +166,14 @@ import '../styles/card.css';
                 outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
             }
         });
+        
+        const targets = document.querySelectorAll('a, button, .social-icon, .tag');
+        targets.forEach(t => {
+            t.addEventListener('mouseenter', () => outline.classList.add('hovering'));
+            t.addEventListener('mouseleave', () => outline.classList.remove('hovering'));
+        });
     }
 
-    // --- Typewriter ---
     const titleEl = document.getElementById('typewriter-title');
     if (titleEl) {
         const text = titleEl.getAttribute('data-text') || "";
@@ -190,11 +183,9 @@ import '../styles/card.css';
         setTimeout(type, 400);
     }
 
-    // --- Toggle Skills ---
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
-
     if (toggleBtn && panel && ctaText) {
         toggleBtn.addEventListener('click', () => {
             const isOpening = panel.classList.toggle('active');
@@ -203,7 +194,6 @@ import '../styles/card.css';
         });
     }
 
-    // --- Email Copy ---
     const copyBtn = document.querySelector('.copy-email-btn');
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
@@ -217,7 +207,6 @@ import '../styles/card.css';
         });
     }
   }
-
   initAll();
   document.addEventListener('astro:after-swap', initAll);
 </script>
