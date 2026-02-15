@@ -48,24 +48,24 @@ import '../styles/card.css';
         <div id="skills-panel" class="skills-panel">
             <div class="panel-inner">
                 <div class="tech-stack">
-                    <span class="tag pulse">Hardware</span>
+                    <span class="tag">Hardware</span>
                     <span class="tag">Windows</span>
-                    <span class="tag pulse">Networking</span>
+                    <span class="tag">Networking</span>
                     <span class="tag">Software</span>
-                    <span class="tag pulse">Troubleshooting</span>
+                    <span class="tag">Troubleshooting</span>
                     <span class="tag">SysConfig</span>
-                    <span class="tag pulse">OS</span>
+                    <span class="tag">OS</span>
                     <span class="tag">LAN</span>
-                    <span class="tag pulse">IT Support</span>
+                    <span class="tag">IT Support</span>
                 </div>
             </div>
         </div>
 
         <div class="trigger-wrapper">
             <button id="toggle-skills" class="skills-cta">
-                <i class="bi bi-chevron-down arrow-left"></i>
+                <i class="bi bi-chevron-down arrow-icon"></i>
                 <span id="cta-text">Click to view my skills</span>
-                <i class="bi bi-chevron-down arrow-right"></i>
+                <i class="bi bi-chevron-down arrow-icon"></i>
             </button>
         </div>
     </div>
@@ -155,7 +155,7 @@ import '../styles/card.css';
     if (toggleBtn && panel && ctaText) {
         toggleBtn.onclick = () => {
             const isOpen = panel.classList.toggle('active');
-            toggleBtn.classList.toggle('is-open');
+            toggleBtn.classList.toggle('is-open'); // This triggers the arrow rotation
             ctaText.textContent = isOpen ? "Hide my skills" : "Click to view my skills";
         };
     }
