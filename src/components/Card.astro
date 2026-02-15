@@ -7,11 +7,9 @@ import '../styles/card.css';
 <div class="cursor-outline"></div>
 
 <div class="container">
-    <div class="warning-wrapper">
-      <div id="force-dark-warning" class="force-dark-msg">
-        <span>⚠️ Please disable "Force Dark Mode" for the best experience.</span>
-        <button id="close-warning" class="close-btn">&times;</button>
-      </div>
+    <div id="force-dark-warning" class="force-dark-msg">
+      <span>⚠️ Please disable "Force Dark Mode" for the best experience.</span>
+      <button id="close-warning" class="close-btn">&times;</button>
     </div>
 
     <div class="main-wrapper reveal">
@@ -22,7 +20,7 @@ import '../styles/card.css';
                     <span class="status-pulse" title="Available for work"></span>
                 </div>
                 
-                <h2 id="typewriter-title" data-text={position}></h2>
+                <h2 id="typewriter-title" class="job-title" data-text={position}></h2>
                 
                 <p set:html={aboutMe}></p>
                 
@@ -52,20 +50,22 @@ import '../styles/card.css';
         </div>
 
         <div id="skills-panel" class="skills-panel">
-            <div class="tech-stack">
-                <span class="tag">Hardware</span>
-                <span class="tag">Windows</span>
-                <span class="tag">Networking</span>
-                <span class="tag">Software</span>
-                <span class="tag">Troubleshooting</span>
-                <span class="tag">SysConfig</span>
-                <span class="tag">OS</span>
-                <span class="tag">LAN</span>
-                <span class="tag">Connectivity</span>
-                <span class="tag">Device Setup</span>
-                <span class="tag">Optimization</span>
-                <span class="tag">IT Support</span>
-                <span class="tag">Systems</span>
+            <div class="panel-content">
+                <div class="tech-stack">
+                    <span class="tag">Hardware</span>
+                    <span class="tag">Windows</span>
+                    <span class="tag">Networking</span>
+                    <span class="tag">Software</span>
+                    <span class="tag">Troubleshooting</span>
+                    <span class="tag">SysConfig</span>
+                    <span class="tag">OS</span>
+                    <span class="tag">LAN</span>
+                    <span class="tag">Connectivity</span>
+                    <span class="tag">Device Setup</span>
+                    <span class="tag">Optimization</span>
+                    <span class="tag">IT Support</span>
+                    <span class="tag">Systems</span>
+                </div>
             </div>
         </div>
 
@@ -83,7 +83,7 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    // 1. TERMINAL TYPEWRITER
+    // 1. TYPEWRITER (Fixing spacing logic)
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.innerText === "") {
@@ -98,16 +98,14 @@ import '../styles/card.css';
         setTimeout(type, 600);
     }
 
-    // 2. CURSOR LOGIC (Restored)
+    // 2. CURSOR
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     if (dot && outline) {
         window.onmousemove = (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-            dot.style.left = `${posX}px`;
-            dot.style.top = `${posY}px`;
-            outline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+            dot.style.left = `${e.clientX}px`;
+            dot.style.top = `${e.clientY}px`;
+            outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
         };
     }
 
@@ -122,7 +120,25 @@ import '../styles/card.css';
         };
     }
 
-    // 4. SCROLL REVEAL
+    // 4. DARK MODE WARNING LOGIC
+    const warning = document.getElementById('force-dark-warning');
+    if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
+        const testDiv = document.createElement('div');
+        testDiv.style.cssText = "background-color: rgb(255, 255, 255); position: absolute; visibility: hidden;";
+        document.body.appendChild(testDiv);
+        setTimeout(() => {
+            if (window.getComputedStyle(testDiv).backgroundColor !== 'rgb(255, 255, 255)') {
+                warning.style.display = 'flex';
+            }
+            document.body.removeChild(testDiv);
+        }, 300);
+    }
+    document.getElementById('close-warning')?.addEventListener('click', () => {
+        if (warning) warning.style.display = 'none';
+        localStorage.setItem('hideForceDarkWarning', 'true');
+    });
+
+    // 5. REVEAL ANIMATION
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
