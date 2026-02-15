@@ -44,15 +44,15 @@ import '../styles/card.css';
         <div id="skills-panel" class="skills-panel">
             <div class="panel-inner">
                 <div class="tech-stack">
-                    <span class="tag">Hardware</span>
+                    <span class="tag pulse">Hardware</span>
                     <span class="tag">Windows</span>
-                    <span class="tag">Networking</span>
+                    <span class="tag pulse">Networking</span>
                     <span class="tag">Software</span>
-                    <span class="tag">Troubleshooting</span>
+                    <span class="tag pulse">Troubleshooting</span>
                     <span class="tag">SysConfig</span>
-                    <span class="tag">OS</span>
+                    <span class="tag pulse">OS</span>
                     <span class="tag">LAN</span>
-                    <span class="tag">IT Support</span>
+                    <span class="tag pulse">IT Support</span>
                 </div>
             </div>
         </div>
@@ -98,11 +98,9 @@ import '../styles/card.css';
                 this.density = (Math.random() * 15) + 5;
             }
             update() {
-                this.x += this.sX;
-                this.y += this.sY;
+                this.x += this.sX; this.y += this.sY;
                 if (this.y > canvas.height) { this.y = -10; this.x = Math.random() * canvas.width; }
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
+                let dx = mouse.x - this.x; let dy = mouse.y - this.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist < mouse.radius) {
                     let force = (mouse.radius - dist) / mouse.radius;
@@ -112,12 +110,10 @@ import '../styles/card.css';
             }
             draw() {
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-        particles = Array.from({length: 110}, () => new Particle());
+        particles = Array.from({length: 100}, () => new Particle());
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
@@ -127,11 +123,9 @@ import '../styles/card.css';
     }
 
     window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
+        mouse.x = e.clientX; mouse.y = e.clientY;
         if (dot && outline) {
-            dot.style.left = `${e.clientX}px`;
-            dot.style.top = `${e.clientY}px`;
+            dot.style.left = `${e.clientX}px`; dot.style.top = `${e.clientY}px`;
             outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
         }
     });
