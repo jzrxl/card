@@ -8,10 +8,13 @@
 
 #snowCanvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 1; /* Above background, below card */
+    pointer-events: none; z-index: 1;
 }
 
-.cursor-dot, .cursor-outline { pointer-events: none; position: fixed; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; }
+.cursor-dot, .cursor-outline { 
+    pointer-events: none; position: fixed; transform: translate(-50%, -50%); 
+    border-radius: 50%; z-index: 9999; 
+}
 .cursor-dot { width: 6px; height: 6px; background-color: #12a89c; }
 .cursor-outline { width: 30px; height: 30px; border: 2px solid rgba(18, 168, 156, 0.5); }
 
@@ -22,7 +25,12 @@
 .descripcion { flex: 1.3; display: flex; flex-direction: column; justify-content: center; padding: 30px; color: #FFFFFF; }
 .descripcion h1 { font-size: 28px; font-weight: 700; margin: 0; }
 
-#typewriter-title { font-size: 16px; font-family: 'JetBrains Mono', monospace; border-right: 2px solid #fff; }
+#typewriter-title { 
+    font-size: 16px; font-family: 'JetBrains Mono', monospace; 
+    border-right: 2px solid #fff; min-height: 1.2em; width: fit-content;
+    animation: blink 0.8s infinite; 
+}
+@keyframes blink { 50% { border-color: transparent; } }
 
 .social-footer { margin-top: auto; padding-top: 10px; }
 .icons { display: flex; gap: 20px; }
@@ -43,4 +51,5 @@
     .main-wrapper { width: 92%; }
     .card-container { flex-direction: column-reverse; }
     #snowCanvas, .cursor-dot, .cursor-outline { display: none; }
+    .container { cursor: auto; }
 }
