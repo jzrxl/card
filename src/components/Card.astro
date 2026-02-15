@@ -3,6 +3,12 @@ const {name, position, aboutMe, linkedin, github, facebook, email, cvLink, profi
 import '../styles/card.css';
 ---
 
+<script 
+  defer 
+  src="https://cloud.umami.is/script.js" 
+  data-website-id="723aea2c-5bef-4955-95e3-f85070987f2c"
+></script>
+
 <div class="container">
     <div class="warning-wrapper">
       <div id="force-dark-warning" class="force-dark-msg">
@@ -57,6 +63,12 @@ import '../styles/card.css';
 </div>
 
 <script>
+  declare global {
+    interface Window {
+      umami: any;
+    }
+  }
+
   function initAll() {
     // --- 1. COPY EMAIL LOGIC ---
     const copyBtn = document.querySelector('.copy-email-btn');
@@ -70,6 +82,10 @@ import '../styles/card.css';
             const originalText = copyTooltip.innerText;
             copyTooltip.innerText = "Copied!";
             copyTooltip.style.opacity = "1";
+            
+            // Umami Custom Event Tracking
+            if (window.umami) window.umami.track('Email Copied');
+
             setTimeout(() => {
               copyTooltip.innerText = originalText;
               copyTooltip.style.opacity = "";
@@ -87,6 +103,10 @@ import '../styles/card.css';
         cvLink.onclick = () => {
             cvLink.classList.add('is-loading');
             cvTooltip.innerText = "Preparing...";
+
+            // Umami Custom Event Tracking
+            if (window.umami) window.umami.track('Resume Viewed');
+
             setTimeout(() => {
                 cvLink.classList.remove('is-loading');
                 cvTooltip.innerText = "Resume";
@@ -104,6 +124,7 @@ import '../styles/card.css';
     canary.style.backgroundColor = 'rgb(255, 255, 255)';
     canary.style.position = 'absolute';
     canary.style.opacity = '0';
+    canary.style.pointerEvents = 'none';
     document.body.appendChild(canary);
 
     setTimeout(() => {
@@ -111,6 +132,9 @@ import '../styles/card.css';
       if (computedBg !== 'rgb(255, 255, 255)' && warning) {
         warning.style.display = 'flex';
         warning.style.justifyContent = 'space-between';
+        
+        // Tracking force dark usage
+        if (window.umami) window.umami.track('Force Dark Detected');
       }
       document.body.removeChild(canary);
     }, 500);
