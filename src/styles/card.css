@@ -8,10 +8,8 @@
 
 #snowCanvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 0; /* Background layer */
+    pointer-events: none; z-index: 1; /* Above background, below card */
 }
-
-.bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
 .cursor-dot, .cursor-outline { pointer-events: none; position: fixed; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; }
 .cursor-dot { width: 6px; height: 6px; background-color: #12a89c; }
@@ -24,27 +22,22 @@
 .descripcion { flex: 1.3; display: flex; flex-direction: column; justify-content: center; padding: 30px; color: #FFFFFF; }
 .descripcion h1 { font-size: 28px; font-weight: 700; margin: 0; }
 
-#typewriter-title { font-size: 16px; font-family: 'JetBrains Mono', monospace; border-right: 2px solid #fff; width: fit-content; animation: blink 0.8s infinite; }
-@keyframes blink { 50% { border-color: transparent; } }
+#typewriter-title { font-size: 16px; font-family: 'JetBrains Mono', monospace; border-right: 2px solid #fff; }
 
 .social-footer { margin-top: auto; padding-top: 10px; }
 .icons { display: flex; gap: 20px; }
 .social-icon { color: white !important; font-size: 24px; transition: 0.2s; cursor: pointer; }
-.social-icon:hover { transform: translateY(-3px); }
 
 .skills-panel { width: 100%; max-height: 0; overflow: hidden; transition: 0.4s ease-out; }
 .skills-panel.active { max-height: 350px; }
 .panel-inner { padding: 0 30px 20px 30px; }
-.tech-stack { display: flex; flex-wrap: wrap; gap: 8px; }
-.tag { background: rgba(0, 0, 0, 0.25); padding: 6px 14px; border-radius: 20px; font-size: 11px; color: #fff; font-family: 'Fredoka', sans-serif; transition: 0.3s; }
+.tag { background: rgba(0, 0, 0, 0.25); padding: 6px 14px; border-radius: 20px; font-size: 11px; color: #fff; font-family: 'Fredoka', sans-serif; display: inline-block; margin: 4px; }
 
 .trigger-wrapper { width: 100%; display: flex; justify-content: center; border-radius: 0 0 12px 12px; padding: 12px 0; }
 .skills-cta { background: none; border: none; color: white; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 12px; }
 
 .image { flex: 0.7; display: flex; justify-content: center; align-items: center; padding-right: 30px; }
 .image img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.2); }
-
-.git-footer { position: absolute; bottom: 15px; width: 100%; text-align: center; color: rgba(255, 255, 255, 0.1); font-size: 10px; font-family: 'JetBrains Mono', monospace; }
 
 @media (max-width: 768px) {
     .main-wrapper { width: 92%; }

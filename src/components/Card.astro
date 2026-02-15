@@ -66,23 +66,22 @@ import '../styles/card.css';
             </button>
         </div>
     </div>
-
-    <footer class="git-footer">
-        <code>git push origin main</code>
-    </footer>
 </div>
 
 <script>
   function initAll() {
-    // --- Console Easter Egg ---
-    console.log("%cWelcome... to Portfolio-com.", "font-weight:bold; font-size:20px; color:#12a89c;");
+    // --- Zombo.com Console Easter Egg ---
+    const zStyle = "font-weight:bold; font-size:20px; color:#12a89c; text-shadow:1px 1px #000;";
+    console.clear();
+    console.log("%cWelcome... to Portfolio-com.", zStyle);
+    console.log("%cThe only limit is yourself.", "color:#888; font-style:italic;");
 
-    // --- Snow Particles ---
+    // --- Snow Particle System ---
     const canvas = document.getElementById('snowCanvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
     let particles: any[] = [];
-    const mouse = { x: -1000, y: -1000, radius: 120 };
+    const mouse = { x: -1000, y: -1000, radius: 100 };
 
     function resize() {
         canvas.width = window.innerWidth;
@@ -90,31 +89,31 @@ import '../styles/card.css';
     }
 
     class Particle {
-        x: number; y: number; size: number; speedX: number; speedY: number; density: number;
+        x: number; y: number; size: number; sX: number; sY: number; density: number;
         constructor() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 1;
-            this.speedX = Math.random() * 1 - 0.5;
-            this.speedY = Math.random() * 1 + 0.3;
-            this.density = (Math.random() * 20) + 1;
+            this.size = Math.random() * 2 + 0.5;
+            this.sX = Math.random() * 0.5 - 0.25;
+            this.sY = Math.random() * 1 + 0.5;
+            this.density = (Math.random() * 15) + 5;
         }
         update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
+            this.x += this.sX;
+            this.y += this.sY;
             if (this.y > canvas.height) { this.y = -10; this.x = Math.random() * canvas.width; }
             
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
-            let distance = Math.sqrt(dx*dx + dy*dy);
-            if (distance < mouse.radius) {
-                const force = (mouse.radius - distance) / mouse.radius;
-                this.x -= (dx / distance) * force * this.density;
-                this.y -= (dy / distance) * force * this.density;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < mouse.radius) {
+                let force = (mouse.radius - dist) / mouse.radius;
+                this.x -= (dx / dist) * force * this.density;
+                this.y -= (dy / dist) * force * this.density;
             }
         }
         draw() {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
@@ -127,24 +126,16 @@ import '../styles/card.css';
         requestAnimationFrame(animate);
     }
 
-    window.onmousemove = (e) => {
+    window.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
-        // Also update cursor effects
-        const dot = document.querySelector('.cursor-dot') as HTMLElement;
-        const outline = document.querySelector('.cursor-outline') as HTMLElement;
-        if (dot && outline) {
-            dot.style.left = `${e.clientX}px`;
-            dot.style.top = `${e.clientY}px`;
-            outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
-        }
-    };
+    });
 
     resize();
-    particles = Array.from({length: 100}, () => new Particle());
+    particles = Array.from({length: 120}, () => new Particle());
     animate();
 
-    // --- Other UI Logic ---
+    // --- UI Logic ---
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
@@ -155,22 +146,8 @@ import '../styles/card.css';
             ctaText.textContent = isOpen ? "Hide my skills" : "Click to view my skills";
         };
     }
-
-    const titleEl = document.getElementById('typewriter-title');
-    if (titleEl && titleEl.textContent === "") {
-        const text = titleEl.getAttribute('data-text') || "";
-        let i = 0;
-        const type = () => {
-            if (i <= text.length) {
-                titleEl.textContent = text.slice(0, i);
-                i++;
-                setTimeout(type, 70);
-            }
-        };
-        setTimeout(type, 500);
-    }
   }
 
   initAll();
-  document.addEventListener('astro:after-swap', initAll);
+  window.addEventListener('resize', () => location.reload()); // Refresh canvas on resize
 </script>
