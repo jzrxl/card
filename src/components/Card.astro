@@ -5,6 +5,7 @@ import '../styles/card.css';
 
 <div class="cursor-dot"></div>
 <div class="cursor-outline"></div>
+<div class="bg-glow"></div>
 
 <div class="container">
     <div id="force-dark-warning" class="force-dark-msg">
@@ -17,7 +18,6 @@ import '../styles/card.css';
             <div class="descripcion">
                 <div class="name-status">
                     <h1>{name}</h1>
-                    <span class="status-pulse" title="Available for work"></span>
                 </div>
                 
                 <div class="title-container">
@@ -85,7 +85,7 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    // 1. TYPEWRITER (Safe spacing logic)
+    // 1. TYPEWRITER (Safe substring logic)
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -100,16 +100,22 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
-    // 2. CURSOR (Restored)
+    // 2. CURSOR & BG GLOW
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
-    if (dot && outline) {
-        window.onmousemove = (e) => {
-            dot.style.left = `${e.clientX}px`;
-            dot.style.top = `${e.clientY}px`;
-            outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
-        };
-    }
+    const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
+
+    window.onmousemove = (e) => {
+        const { clientX: x, clientY: y } = e;
+        if (dot && outline) {
+            dot.style.left = `${x}px`;
+            dot.style.top = `${y}px`;
+            outline.animate({ left: `${x}px`, top: `${y}px` }, { duration: 500, fill: "forwards" });
+        }
+        if (bgGlow) {
+            bgGlow.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(18, 168, 156, 0.12), transparent 80%)`;
+        }
+    };
 
     // 3. SKILLS TOGGLE
     const toggleBtn = document.getElementById('toggle-skills');
@@ -122,7 +128,7 @@ import '../styles/card.css';
         };
     }
 
-    // 4. DARK MODE WARNING (No squiggles)
+    // 4. DARK MODE WARNING
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
