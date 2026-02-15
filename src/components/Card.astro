@@ -73,12 +73,32 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
+    // New Easter Egg Message
     console.clear();
-    console.log("%cWelcome... to Portfolio-com.", "font-weight:bold; font-size:20px; color:#12a89c;");
+    console.log("%cHey there🙋‍♂️", "font-weight:bold; font-size:24px; color:#12a89c; text-shadow: 2px 2px 0px #024945;");
 
+    const titleEl = document.getElementById('typewriter-title');
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const canvas = document.getElementById('snowCanvas') as HTMLCanvasElement;
+    
+    // --- Typewriter Fix ---
+    if (titleEl) {
+        const text = titleEl.getAttribute('data-text') || "";
+        titleEl.textContent = ""; 
+        let i = 0;
+        
+        function type() {
+            if (i < text.length) {
+                titleEl.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, 85); // Slightly faster for snappier feel
+            }
+        }
+        setTimeout(type, 400);
+    }
+
+    // --- Snow & Cursor Logic ---
     const ctx = canvas?.getContext('2d')!;
     let particles: any[] = [];
     const mouse = { x: -1000, y: -1000, radius: 110 };
@@ -134,28 +154,14 @@ import '../styles/card.css';
         }
     });
 
-    const titleEl = document.getElementById('typewriter-title');
-    if (titleEl) {
-        const text = titleEl.getAttribute('data-text') || "";
-        titleEl.textContent = "";
-        let i = 0;
-        const type = () => {
-            if (i <= text.length) {
-                titleEl.textContent = text.slice(0, i);
-                i++;
-                setTimeout(type, 80);
-            }
-        };
-        setTimeout(type, 500);
-    }
-
+    // --- Skills Toggle ---
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
     if (toggleBtn && panel && ctaText) {
         toggleBtn.onclick = () => {
             const isOpen = panel.classList.toggle('active');
-            toggleBtn.classList.toggle('is-open'); // This triggers the arrow rotation
+            toggleBtn.classList.toggle('is-open');
             ctaText.textContent = isOpen ? "Hide my skills" : "Click to view my skills";
         };
     }
