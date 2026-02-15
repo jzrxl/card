@@ -49,7 +49,9 @@ import '../styles/card.css';
                     <span class="tag">Networking</span>
                     <span class="tag">Software</span>
                     <span class="tag">Troubleshooting</span>
+                    <span class="tag">SysConfig</span>
                     <span class="tag">OS</span>
+                    <span class="tag">LAN</span>
                     <span class="tag">IT Support</span>
                 </div>
             </div>
@@ -67,19 +69,15 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    // --- 1. Console Easter Egg ---
     console.clear();
     console.log("%cWelcome... to Portfolio-com.", "font-weight:bold; font-size:20px; color:#12a89c;");
 
-    // --- 2. Custom Cursor Logic ---
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
-    
-    // --- 3. Snow Canvas Logic ---
     const canvas = document.getElementById('snowCanvas') as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d')!;
     let particles: any[] = [];
-    const mouse = { x: -1000, y: -1000, radius: 100 };
+    const mouse = { x: -1000, y: -1000, radius: 110 };
 
     if (canvas) {
         const resize = () => {
@@ -96,7 +94,7 @@ import '../styles/card.css';
                 this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 2 + 0.5;
                 this.sX = Math.random() * 0.5 - 0.25;
-                this.sY = Math.random() * 1 + 0.5;
+                this.sY = Math.random() * 1 + 0.4;
                 this.density = (Math.random() * 15) + 5;
             }
             update() {
@@ -119,7 +117,7 @@ import '../styles/card.css';
                 ctx.fill();
             }
         }
-        particles = Array.from({length: 100}, () => new Particle());
+        particles = Array.from({length: 110}, () => new Particle());
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
@@ -128,7 +126,6 @@ import '../styles/card.css';
         animate();
     }
 
-    // --- 4. Unified Mouse Move (Cursor + Snow) ---
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
@@ -139,11 +136,10 @@ import '../styles/card.css';
         }
     });
 
-    // --- 5. Typewriter Logic ---
     const titleEl = document.getElementById('typewriter-title');
     if (titleEl) {
         const text = titleEl.getAttribute('data-text') || "";
-        titleEl.textContent = ""; // Reset
+        titleEl.textContent = "";
         let i = 0;
         const type = () => {
             if (i <= text.length) {
@@ -155,7 +151,6 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
-    // --- 6. UI Toggle Logic ---
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
