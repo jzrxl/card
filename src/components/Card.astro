@@ -24,16 +24,34 @@ import '../styles/card.css';
                     <h2 id="typewriter-title" data-text={position}></h2>
                 </div>
                 
-                <p class="about-text" set:html={aboutMe}></p>
+                <div class="about-container">
+                    <p class="about-text" set:html={aboutMe}></p>
+                </div>
                 
                 <div class="social-footer">
                     <div class="icons">
-                        {facebook && <a href={facebook} class="social-icon" target="_blank" aria-label="Facebook"><i class="bi bi-facebook"></i></a>}
-                        {github && <a href={github} class="social-icon" target="_blank" aria-label="Github"><i class="bi bi-github"></i></a>}
-                        {linkedin && <a href={linkedin} class="social-icon" target="_blank" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>}
-                        {cvLink && <a href={cvLink} class="social-icon" target="_blank" aria-label="Download CV"><i class="bi bi-file-earmark-arrow-down"></i></a>}
+                        {facebook && (
+                            <a href={facebook} class="social-icon" target="_blank" data-tooltip="Facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                        )}
+                        {github && (
+                            <a href={github} class="social-icon" target="_blank" data-tooltip="GitHub">
+                                <i class="bi bi-github"></i>
+                            </a>
+                        )}
+                        {linkedin && (
+                            <a href={linkedin} class="social-icon" target="_blank" data-tooltip="LinkedIn">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                        )}
+                        {cvLink && (
+                            <a href={cvLink} class="social-icon" target="_blank" data-tooltip="Download CV">
+                                <i class="bi bi-file-earmark-arrow-down"></i>
+                            </a>
+                        )}
                         {email && (
-                            <div class="social-icon copy-email-btn" data-email={email} role="button" aria-label="Email">
+                            <div class="social-icon copy-email-btn" data-email={email} role="button" data-tooltip="Click to Copy Email">
                                 <i class="bi bi-envelope-at-fill"></i>
                             </div>
                         )}
@@ -41,7 +59,9 @@ import '../styles/card.css';
                 </div>
             </div>
             <div class="image">
-                <img src={profileImage} alt={name}>
+                <div class="img-wrapper">
+                    <img src={profileImage} alt={name}>
+                </div>
             </div>
         </div>
 
@@ -81,6 +101,7 @@ import '../styles/card.css';
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const canvas = document.getElementById('snowCanvas') as HTMLCanvasElement;
     
+    // Typewriter
     if (titleEl) {
         const text = titleEl.getAttribute('data-text') || "";
         titleEl.textContent = ""; 
@@ -95,6 +116,7 @@ import '../styles/card.css';
         setTimeout(type, 400);
     }
 
+    // Snow/Cursor
     const ctx = canvas?.getContext('2d')!;
     let particles: any[] = [];
     const mouse = { x: -1000, y: -1000, radius: 110 };
@@ -134,6 +156,21 @@ import '../styles/card.css';
         }
     });
 
+    // Copy Email Logic
+    const copyBtn = document.querySelector('.copy-email-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            const email = copyBtn.getAttribute('data-email');
+            if (email) {
+                navigator.clipboard.writeText(email);
+                const originalTip = copyBtn.getAttribute('data-tooltip');
+                copyBtn.setAttribute('data-tooltip', 'Copied!');
+                setTimeout(() => copyBtn.setAttribute('data-tooltip', originalTip || ""), 2000);
+            }
+        });
+    }
+
+    // Toggle Skills
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
