@@ -1,10 +1,16 @@
 ---
-// src/components/Card.astro
 const {name, position, aboutMe, linkedin, github, facebook, email, cvLink, profileImage } = Astro.props;
 import '../styles/card.css';
 ---
 
 <div class="container">
+    <div class="warning-wrapper">
+      <div id="force-dark-warning" class="force-dark-msg">
+        <span>⚠️ Please disable "Force Dark Mode" or Dark Reader for the best experience.</span>
+        <button id="close-warning" style="background: none; border: none; color: white; cursor: pointer; font-weight: bold; margin-left: 10px; font-size: 18px;">&times;</button>
+      </div>
+    </div>
+
     <div class="card-container">
         <div class="descripcion">
             <h1>{name}</h1>
@@ -14,32 +20,28 @@ import '../styles/card.css';
             <div class="icons">
                 {facebook && (
                     <a href={facebook} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">Facebook</span>
+                        <span class="tooltip-text">Facebook</span>
                         <i class="bi bi-facebook"></i>
                     </a>
                 )}
-
                 {github && (
                     <a href={github} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">GitHub</span>
+                        <span class="tooltip-text">GitHub</span>
                         <i class="bi bi-github"></i>
                     </a>
                 )}
-
                 {linkedin && (
                     <a href={linkedin} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">LinkedIn</span>
+                        <span class="tooltip-text">LinkedIn</span>
                         <i class="bi bi-linkedin"></i>
                     </a>
                 )}
-
                 {cvLink && (
                     <a href={cvLink} class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="fade">Resume</span>
+                        <span class="tooltip-text">Resume</span>
                         <i class="bi bi-file-earmark-arrow-down"></i>
                     </a>
                 )}
-
                 {email && (
                     <div class="hover-text copy-email-btn" data-email={email}>
                         <span class="tooltip-text" id="copy-tooltip">Click to Copy</span>
@@ -55,12 +57,13 @@ import '../styles/card.css';
 </div>
 
 <script>
-  function initCopyEmail() {
+  function initAll() {
+    // --- 1. COPY EMAIL LOGIC ---
     const copyBtn = document.querySelector('.copy-email-btn');
     const tooltip = document.getElementById('copy-tooltip');
 
     if (copyBtn instanceof HTMLElement && tooltip) {
-      copyBtn.addEventListener('click', () => {
+      copyBtn.onclick = () => {
         const email = copyBtn.getAttribute('data-email');
         if (email) {
           navigator.clipboard.writeText(email).then(() => {
@@ -73,10 +76,39 @@ import '../styles/card.css';
             }, 2000);
           });
         }
-      });
+      };
+    }
+
+    // --- 2. FORCE DARK DETECTION ---
+    const warning = document.getElementById('force-dark-warning');
+    const closeBtn = document.getElementById('close-warning');
+    
+    if (localStorage.getItem('hideForceDarkWarning') === 'true') return;
+
+    const canary = document.createElement('div');
+    canary.style.backgroundColor = 'rgb(255, 255, 255)';
+    canary.style.position = 'absolute';
+    canary.style.opacity = '0';
+    document.body.appendChild(canary);
+
+    setTimeout(() => {
+      const computedBg = window.getComputedStyle(canary).backgroundColor;
+      if (computedBg !== 'rgb(255, 255, 255)' && warning) {
+        warning.style.display = 'flex';
+        warning.style.justifyContent = 'space-between';
+      }
+      document.body.removeChild(canary);
+    }, 500);
+
+    if (closeBtn && warning) {
+        closeBtn.onclick = () => {
+            warning.style.display = 'none';
+            localStorage.setItem('hideForceDarkWarning', 'true');
+        };
     }
   }
 
-  initCopyEmail();
-  document.addEventListener('astro:after-swap', initCopyEmail);
+  // Initialize
+  initAll();
+  document.addEventListener('astro:after-swap', initAll);
 </script>
