@@ -178,12 +178,6 @@ import '../styles/card.css';
                 outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
             }
         });
-
-        const targets = document.querySelectorAll('a, button, .social-icon, .tag');
-        targets.forEach(t => {
-            t.addEventListener('mouseenter', () => outline.classList.add('hovering'));
-            t.addEventListener('mouseleave', () => outline.classList.remove('hovering'));
-        });
     }
 
     // --- Typewriter ---
@@ -205,7 +199,7 @@ import '../styles/card.css';
         toggleBtn.addEventListener('click', () => {
             const isOpening = panel.classList.toggle('active');
             toggleBtn.classList.toggle('is-open');
-            ctaText.textContent = isOpening ? "Hide my skills" : "Click to view my skills";
+            ctaText.textContent = isOpening ? "Hide" : "Click to view my skills";
         });
     }
 
