@@ -20,59 +20,61 @@ import '../styles/card.css';
       </div>
     </div>
 
-    <div class="card-container">
-        <button id="open-skills" class="drawer-trigger" title="View Skills">
-            <i class="bi bi-chevron-compact-right"></i>
-        </button>
-
-        <div class="descripcion">
-            <div class="name-status">
-                <h1>{name}</h1>
-                <span class="status-pulse" title="Available for work"></span>
-            </div>
-            <h2>{position}</h2>
-            <p set:html={aboutMe}></p>
-            
-            <div class="icons">
-                {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
-                {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
-                {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
-                {cvLink && (
-                    <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
-                        <span class="tooltip-text" id="cv-tooltip">Resume</span>
-                        <i class="bi bi-file-earmark-arrow-down"></i>
-                    </a>
-                )}
-                {email && (
-                    <div class="hover-text copy-email-btn" data-email={email}>
-                        <span class="tooltip-text" id="copy-tooltip">Click to Copy</span>
-                        <i class="bi bi-envelope-at-fill"></i>
+    <div class="main-wrapper">
+        <div class="card-container">
+            <div class="descripcion">
+                <div class="name-status">
+                    <h1>{name}</h1>
+                    <span class="status-pulse" title="Available for work"></span>
+                </div>
+                <h2>{position}</h2>
+                <p set:html={aboutMe}></p>
+                
+                <div class="footer-row">
+                    <div class="icons">
+                        {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
+                        {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
+                        {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
+                        {cvLink && (
+                            <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
+                                <span class="tooltip-text" id="cv-tooltip">Resume</span>
+                                <i class="bi bi-file-earmark-arrow-down"></i>
+                            </a>
+                        )}
+                        {email && (
+                            <div class="hover-text copy-email-btn" data-email={email}>
+                                <span class="tooltip-text" id="copy-tooltip">Click to Copy</span>
+                                <i class="bi bi-envelope-at-fill"></i>
+                            </div>
+                        )}
                     </div>
-                )}
+
+                    <button id="toggle-skills" class="skills-toggle-btn">
+                        Skills <i class="bi bi-chevron-down" id="arrow-icon"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="image">
+                <img src={profileImage} alt={name}>
             </div>
         </div>
-        <div class="image">
-            <img src={profileImage} alt={name}>
-        </div>
-    </div>
 
-    <div id="skills-drawer" class="skills-drawer">
-        <button id="close-skills" class="close-drawer">&times;</button>
-        <h3>Technical Skills</h3>
-        <div class="tech-stack-drawer">
-            <span class="tag">Hardware</span>
-            <span class="tag">Windows</span>
-            <span class="tag">Networking</span>
-            <span class="tag">Software</span>
-            <span class="tag">Troubleshooting</span>
-            <span class="tag">SysConfig</span>
-            <span class="tag">OS</span>
-            <span class="tag">LAN</span>
-            <span class="tag">Connectivity</span>
-            <span class="tag">Device Setup</span>
-            <span class="tag">Optimization</span>
-            <span class="tag">IT Support</span>
-            <span class="tag">Systems</span>
+        <div id="skills-panel" class="skills-panel">
+            <div class="tech-stack-grid">
+                <span class="tag">Hardware</span>
+                <span class="tag">Windows</span>
+                <span class="tag">Networking</span>
+                <span class="tag">Software</span>
+                <span class="tag">Troubleshooting</span>
+                <span class="tag">SysConfig</span>
+                <span class="tag">OS</span>
+                <span class="tag">LAN</span>
+                <span class="tag">Connectivity</span>
+                <span class="tag">Device Setup</span>
+                <span class="tag">Optimization</span>
+                <span class="tag">IT Support</span>
+                <span class="tag">Systems</span>
+            </div>
         </div>
     </div>
 </div>
@@ -81,17 +83,17 @@ import '../styles/card.css';
   declare global { interface Window { umami: any; } }
 
   function initAll() {
-    // --- 1. DRAWER LOGIC ---
-    const openDrawer = document.getElementById('open-skills');
-    const closeDrawer = document.getElementById('close-skills');
-    const drawer = document.getElementById('skills-drawer');
+    // --- 1. EXPANDABLE PANEL LOGIC ---
+    const toggleBtn = document.getElementById('toggle-skills');
+    const panel = document.getElementById('skills-panel');
+    const arrow = document.getElementById('arrow-icon');
 
-    if (openDrawer && closeDrawer && drawer) {
-        openDrawer.onclick = () => {
-            drawer.classList.add('active');
-            if (window.umami) window.umami.track('Skills Drawer Opened');
+    if (toggleBtn && panel && arrow) {
+        toggleBtn.onclick = () => {
+            const isOpen = panel.classList.toggle('active');
+            arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+            if (isOpen && window.umami) window.umami.track('Skills Expanded');
         };
-        closeDrawer.onclick = () => drawer.classList.remove('active');
     }
 
     // --- 2. CURSOR LOGIC ---
@@ -111,7 +113,32 @@ import '../styles/card.css';
         });
     }
 
-    // --- 3. OTHER LOGIC ---
+    // --- 3. DARK MODE DETECTION FIX ---
+    const warning = document.getElementById('force-dark-warning');
+    if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
+        const testDiv = document.createElement('div');
+        testDiv.style.cssText = "background-color: rgb(255, 255, 255); position: absolute; visibility: hidden;";
+        document.body.appendChild(testDiv);
+        
+        // Wait for potential extension injection
+        setTimeout(() => {
+            const bg = window.getComputedStyle(testDiv).backgroundColor;
+            if (bg !== 'rgb(255, 255, 255)') {
+                warning.style.display = 'flex';
+            }
+            document.body.removeChild(testDiv);
+        }, 300);
+    }
+
+    const closeBtn = document.getElementById('close-warning');
+    if (closeBtn && warning) {
+        closeBtn.onclick = () => {
+            warning.style.display = 'none';
+            localStorage.setItem('hideForceDarkWarning', 'true');
+        };
+    }
+
+    // --- 4. EMAIL/CV LOGIC ---
     const copyBtn = document.querySelector('.copy-email-btn');
     const copyTooltip = document.getElementById('copy-tooltip');
     if (copyBtn instanceof HTMLElement && copyTooltip) {
@@ -139,28 +166,6 @@ import '../styles/card.css';
             setTimeout(() => { cvLink.classList.remove('is-loading'); cvTooltip.innerText = "Resume"; }, 2000);
         };
     }
-
-    const warning = document.getElementById('force-dark-warning');
-    const closeBtn = document.getElementById('close-warning');
-    if (localStorage.getItem('hideForceDarkWarning') === 'true' || !warning) return;
-
-    const canary = document.createElement('div');
-    canary.style.backgroundColor = 'rgb(255, 255, 255)';
-    canary.style.position = 'absolute';
-    canary.style.opacity = '0';
-    document.body.appendChild(canary);
-
-    setTimeout(() => {
-      if (window.getComputedStyle(canary).backgroundColor !== 'rgb(255, 255, 255)') {
-        warning.style.display = 'flex';
-      }
-      document.body.removeChild(canary);
-    }, 500);
-
-    if (closeBtn) closeBtn.onclick = () => {
-        warning.style.display = 'none';
-        localStorage.setItem('hideForceDarkWarning', 'true');
-    };
   }
 
   initAll();
