@@ -25,20 +25,50 @@ import '../styles/card.css';
                 <p set:html={aboutMe}></p>
                 
                 <div class="social-footer">
-                    <div class="icons">
-                        {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
-                        {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
-                        {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
+                    <div class="icons-grid">
+                        {facebook && (
+                            <div class="icon-item">
+                                <a href={facebook} class="hover-text" target="_blank">
+                                    <span class="tooltip-text">Facebook</span>
+                                    <i class="bi bi-facebook"></i>
+                                </a>
+                                <span class="icon-label">Facebook</span>
+                            </div>
+                        )}
+                        {github && (
+                            <div class="icon-item">
+                                <a href={github} class="hover-text" target="_blank">
+                                    <span class="tooltip-text">GitHub</span>
+                                    <i class="bi bi-github"></i>
+                                </a>
+                                <span class="icon-label">GitHub</span>
+                            </div>
+                        )}
+                        {linkedin && (
+                            <div class="icon-item">
+                                <a href={linkedin} class="hover-text" target="_blank">
+                                    <span class="tooltip-text">LinkedIn</span>
+                                    <i class="bi bi-linkedin"></i>
+                                </a>
+                                <span class="icon-label">LinkedIn</span>
+                            </div>
+                        )}
                         {cvLink && (
-                            <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
-                                <span class="tooltip-text">Resume</span>
-                                <i class="bi bi-file-earmark-arrow-down"></i>
-                            </a>
+                            <div class="icon-item">
+                                <a href={cvLink} class="hover-text" target="_blank">
+                                    <span class="tooltip-text">Resume</span>
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
+                                </a>
+                                <span class="icon-label">Resume</span>
+                            </div>
                         )}
                         {email && (
-                            <div class="hover-text copy-email-btn" data-email={email}>
-                                <span class="tooltip-text">Copy Email</span>
-                                <i class="bi bi-envelope-at-fill"></i>
+                            <div class="icon-item">
+                                <div class="hover-text copy-email-btn" data-email={email}>
+                                    <span class="tooltip-text">Copy</span>
+                                    <i class="bi bi-envelope-at-fill"></i>
+                                </div>
+                                <span class="icon-label">Email</span>
                             </div>
                         )}
                     </div>
@@ -50,7 +80,7 @@ import '../styles/card.css';
         </div>
 
         <div id="skills-panel" class="skills-panel">
-            <div class="panel-content">
+            <div class="panel-inner">
                 <div class="tech-stack">
                     <span class="tag">Hardware</span>
                     <span class="tag">Windows</span>
@@ -83,14 +113,15 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    // 1. TYPEWRITER (Fixing spacing logic)
+    // 1. TYPEWRITER (Fixed Logic)
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.innerText === "") {
         let i = 0;
         function type() {
             if (i < text.length) {
-                titleEl!.innerText += text.charAt(i);
+                // Using textContent and incremental substring to preserve spaces
+                titleEl!.textContent = text.substring(0, i + 1);
                 i++;
                 setTimeout(type, 80);
             }
@@ -120,8 +151,10 @@ import '../styles/card.css';
         };
     }
 
-    // 4. DARK MODE WARNING LOGIC
+    // 4. DARK MODE WARNING (Fixed Squiggle)
     const warning = document.getElementById('force-dark-warning');
+    const closeBtn = document.getElementById('close-warning');
+    
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
         const testDiv = document.createElement('div');
         testDiv.style.cssText = "background-color: rgb(255, 255, 255); position: absolute; visibility: hidden;";
@@ -133,12 +166,15 @@ import '../styles/card.css';
             document.body.removeChild(testDiv);
         }, 300);
     }
-    document.getElementById('close-warning')?.addEventListener('click', () => {
-        if (warning) warning.style.display = 'none';
-        localStorage.setItem('hideForceDarkWarning', 'true');
-    });
 
-    // 5. REVEAL ANIMATION
+    if (closeBtn && warning) {
+        closeBtn.addEventListener('click', () => {
+            warning.style.display = 'none';
+            localStorage.setItem('hideForceDarkWarning', 'true');
+        });
+    }
+
+    // 5. REVEAL
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
