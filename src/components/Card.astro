@@ -35,7 +35,7 @@ import '../styles/card.css';
                         {email && (
                             <div class="social-icon copy-email-btn" data-email={email} role="button">
                                 <i class="bi bi-envelope-at-fill"></i>
-                                <span class="tooltip">Click to Copy</span>
+                                <span class="tooltip">Copy Email</span>
                             </div>
                         )}
                     </div>
@@ -82,6 +82,18 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
+    // --- Zombo.com Easter Egg ---
+    const zomboStyle = "font-weight: bold; font-size: 20px; color: #12a89c; text-shadow: 2px 2px 0px #024945;";
+    const subStyle = "font-family: monospace; font-size: 12px; color: #888;";
+    
+    console.clear();
+    console.log("%cWelcome... to My Portfolio.", zomboStyle);
+    console.log("%cThis is Portfolio-com.", zomboStyle);
+    console.log("%cAnything is possible... at Portfolio-com.", subStyle);
+    console.log("%cThe only limit is yourself.", "color: white; background: #12a89c; padding: 2px 5px; border-radius: 3px;");
+    console.log("%cWelcome... to Portfolio-com.", zomboStyle);
+
+    // --- Typewriter ---
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -96,6 +108,7 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
+    // --- Mouse & Glow ---
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
@@ -115,6 +128,7 @@ import '../styles/card.css';
         };
     }
 
+    // --- Toggle Logic ---
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
@@ -127,26 +141,7 @@ import '../styles/card.css';
         };
     }
 
-    const warning = document.getElementById('force-dark-warning');
-    const closeBtn = document.getElementById('close-warning');
-    if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
-        const test = document.createElement('div');
-        test.style.cssText = "background-color: #ffffff; color: #000000; position: fixed; top: -100px; opacity: 0;";
-        document.body.appendChild(test);
-        setTimeout(() => {
-            if (window.getComputedStyle(test).backgroundColor !== 'rgb(255, 255, 255)') {
-                warning.style.display = 'flex';
-            }
-            document.body.removeChild(test);
-        }, 400);
-    }
-    if (closeBtn && warning) {
-        closeBtn.onclick = () => {
-            warning.style.display = 'none';
-            localStorage.setItem('hideForceDarkWarning', 'true');
-        };
-    }
-
+    // --- Reveal Animation ---
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
