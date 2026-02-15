@@ -3,12 +3,6 @@ const {name, position, aboutMe, linkedin, github, facebook, email, cvLink, profi
 import '../styles/card.css';
 ---
 
-<script 
-  defer 
-  src="https://cloud.umami.is/script.js" 
-  data-website-id="723aea2c-5bef-4955-95e3-f85070987f2c"
-></script>
-
 <div class="cursor-dot"></div>
 <div class="cursor-outline"></div>
 
@@ -20,32 +14,36 @@ import '../styles/card.css';
       </div>
     </div>
 
-    <div class="main-wrapper">
+    <div class="main-wrapper reveal">
         <div class="card-container">
             <div class="descripcion">
                 <div class="name-status">
                     <h1>{name}</h1>
                     <span class="status-pulse" title="Available for work"></span>
                 </div>
+                
                 <h2 id="typewriter-title" data-text={position}></h2>
+                
                 <p set:html={aboutMe}></p>
                 
-                <div class="icons">
-                    {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
-                    {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
-                    {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
-                    {cvLink && (
-                        <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
-                            <span class="tooltip-text">Resume</span>
-                            <i class="bi bi-file-earmark-arrow-down"></i>
-                        </a>
-                    )}
-                    {email && (
-                        <div class="hover-text copy-email-btn" data-email={email}>
-                            <span class="tooltip-text">Copy Email</span>
-                            <i class="bi bi-envelope-at-fill"></i>
-                        </div>
-                    )}
+                <div class="social-footer">
+                    <div class="icons">
+                        {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
+                        {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
+                        {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
+                        {cvLink && (
+                            <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
+                                <span class="tooltip-text">Resume</span>
+                                <i class="bi bi-file-earmark-arrow-down"></i>
+                            </a>
+                        )}
+                        {email && (
+                            <div class="hover-text copy-email-btn" data-email={email}>
+                                <span class="tooltip-text">Copy Email</span>
+                                <i class="bi bi-envelope-at-fill"></i>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             <div class="image">
@@ -72,7 +70,7 @@ import '../styles/card.css';
         </div>
 
         <div class="trigger-wrapper">
-            <button id="toggle-skills" class="arrow-btn">
+            <button id="toggle-skills" class="arrow-btn" aria-label="Toggle Skills">
                 <i class="bi bi-chevron-down" id="arrow-icon"></i>
             </button>
         </div>
@@ -85,18 +83,7 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    const toggleBtn = document.getElementById('toggle-skills');
-    const panel = document.getElementById('skills-panel');
-    const arrow = document.getElementById('arrow-icon');
-
-    if (toggleBtn && panel && arrow) {
-        toggleBtn.onclick = () => {
-            const isOpen = panel.classList.toggle('active');
-            arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-        };
-    }
-
-    // Typewriter
+    // 1. TERMINAL TYPEWRITER
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.innerText === "") {
@@ -108,8 +95,40 @@ import '../styles/card.css';
                 setTimeout(type, 80);
             }
         }
-        type();
+        setTimeout(type, 600);
     }
+
+    // 2. CURSOR LOGIC (Restored)
+    const dot = document.querySelector('.cursor-dot') as HTMLElement;
+    const outline = document.querySelector('.cursor-outline') as HTMLElement;
+    if (dot && outline) {
+        window.onmousemove = (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            dot.style.left = `${posX}px`;
+            dot.style.top = `${posY}px`;
+            outline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+        };
+    }
+
+    // 3. SKILLS TOGGLE
+    const toggleBtn = document.getElementById('toggle-skills');
+    const panel = document.getElementById('skills-panel');
+    const arrow = document.getElementById('arrow-icon');
+    if (toggleBtn && panel && arrow) {
+        toggleBtn.onclick = () => {
+            const isOpen = panel.classList.toggle('active');
+            arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        };
+    }
+
+    // 4. SCROLL REVEAL
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('active');
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
 
   initAll();
