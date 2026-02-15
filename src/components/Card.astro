@@ -15,56 +15,22 @@ import '../styles/card.css';
 <div class="container">
     <div class="warning-wrapper">
       <div id="force-dark-warning" class="force-dark-msg">
-        <span>⚠️ Disable "Force Dark Mode" for the best experience.</span>
+        <span>⚠️ Please disable "Force Dark Mode" for the best experience.</span>
         <button id="close-warning" class="close-btn">&times;</button>
       </div>
     </div>
 
-    <div class="main-wrapper">
-        <div class="card-container">
-            <div class="image">
-                <img src={profileImage} alt={name}>
+    <div class="card-container">
+        <div class="descripcion">
+            <div class="name-status">
+                <h1>{name}</h1>
+                <span class="status-pulse" title="Available for work"></span>
             </div>
-            <div class="descripcion">
-                <div class="name-status">
-                    <h1>{name}</h1>
-                    <span class="status-pulse" title="Available for work"></span>
-                </div>
-                <h2>{position}</h2>
-                <p set:html={aboutMe}></p>
-                
-                <div class="footer-row">
-                    <div class="icons">
-                        {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
-                        {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
-                        {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
-                        {cvLink && (
-                            <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
-                                <span class="tooltip-text" id="cv-tooltip">Resume</span>
-                                <i class="bi bi-file-earmark-arrow-down"></i>
-                            </a>
-                        )}
-                        {email && (
-                            <div class="hover-text copy-email-btn" data-email={email}>
-                                <span class="tooltip-text" id="copy-tooltip">Click to Copy</span>
-                                <i class="bi bi-envelope-at-fill"></i>
-                            </div>
-                        )}
-                    </div>
+            <h2>{position}</h2>
+            
+            <p set:html={aboutMe}></p>
 
-                    <button id="toggle-skills" class="skills-toggle-btn">
-                        Skills <i class="bi bi-chevron-down" id="arrow-icon"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="skills-panel" class="skills-panel">
-            <div class="skills-header-mobile">
-                <h3>Technical Skills</h3>
-                <button id="close-skills-mobile" class="close-panel-btn">&times;</button>
-            </div>
-            <div class="tech-stack-grid">
+            <div class="tech-stack">
                 <span class="tag">Hardware</span>
                 <span class="tag">Windows</span>
                 <span class="tag">Networking</span>
@@ -79,64 +45,71 @@ import '../styles/card.css';
                 <span class="tag">IT Support</span>
                 <span class="tag">Systems</span>
             </div>
+            
+            <div class="icons">
+                {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
+                {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
+                {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
+                {cvLink && (
+                    <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
+                        <span class="tooltip-text" id="cv-tooltip">Resume</span>
+                        <i class="bi bi-file-earmark-arrow-down"></i>
+                    </a>
+                )}
+                {email && (
+                    <div class="hover-text copy-email-btn" data-email={email}>
+                        <span class="tooltip-text" id="copy-tooltip">Click to Copy</span>
+                        <i class="bi bi-envelope-at-fill"></i>
+                    </div>
+                )}
+            </div>
+        </div>
+        <div class="image">
+            <img src={profileImage} alt={name}>
         </div>
     </div>
-    <div id="overlay" class="overlay"></div>
 </div>
 
 <script>
   declare global { interface Window { umami: any; } }
 
   function initAll() {
-    const toggleBtn = document.getElementById('toggle-skills');
-    const closeBtnMobile = document.getElementById('close-skills-mobile');
-    const panel = document.getElementById('skills-panel');
-    const arrow = document.getElementById('arrow-icon');
-    const overlay = document.getElementById('overlay');
-
-    const togglePanel = (forceClose = false) => {
-        const isOpen = forceClose ? false : panel?.classList.toggle('active');
-        if (forceClose) panel?.classList.remove('active');
-        
-        if (arrow) arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-        overlay?.classList.toggle('active', !!isOpen);
-        
-        if (isOpen && window.umami) window.umami.track('Skills Expanded');
-    };
-
-    if (toggleBtn) toggleBtn.onclick = () => togglePanel();
-    if (closeBtnMobile) closeBtnMobile.onclick = () => togglePanel(true);
-    if (overlay) overlay.onclick = () => togglePanel(true);
-
-    // --- CURSOR LOGIC ---
+    // --- 1. CURSOR LOGIC ---
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
+    const hoverables = document.querySelectorAll('a, .copy-email-btn, button');
+
     if (dot && outline) {
         window.onmousemove = (e) => {
             dot.style.left = `${e.clientX}px`;
             dot.style.top = `${e.clientY}px`;
             outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
         };
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => outline.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => outline.classList.remove('cursor-hover'));
+        });
     }
 
-    // --- DARK MODE DETECTION ---
+    // --- 2. DARK MODE DETECTION FIX ---
     const warning = document.getElementById('force-dark-warning');
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
         const testDiv = document.createElement('div');
         testDiv.style.cssText = "background-color: rgb(255, 255, 255); position: absolute; visibility: hidden;";
         document.body.appendChild(testDiv);
         setTimeout(() => {
-            if (window.getComputedStyle(testDiv).backgroundColor !== 'rgb(255, 255, 255)') warning.style.display = 'flex';
+            const bg = window.getComputedStyle(testDiv).backgroundColor;
+            if (bg !== 'rgb(255, 255, 255)') warning.style.display = 'flex';
             document.body.removeChild(testDiv);
         }, 300);
     }
-    
+
     document.getElementById('close-warning')?.addEventListener('click', () => {
         if (warning) warning.style.display = 'none';
         localStorage.setItem('hideForceDarkWarning', 'true');
     });
 
-    // --- EMAIL LOGIC ---
+    // --- 3. INTERACTION LOGIC ---
     const copyBtn = document.querySelector('.copy-email-btn');
     const copyTooltip = document.getElementById('copy-tooltip');
     if (copyBtn instanceof HTMLElement && copyTooltip) {
@@ -144,9 +117,10 @@ import '../styles/card.css';
         const email = copyBtn.getAttribute('data-email');
         if (email) {
           navigator.clipboard.writeText(email).then(() => {
+            const originalText = copyTooltip.innerText;
             copyTooltip.innerText = "Copied!";
-            if (window.umami) window.umami.track('Email Copied');
-            setTimeout(() => { copyTooltip.innerText = "Click to Copy"; }, 2000);
+            copyTooltip.style.opacity = "1";
+            setTimeout(() => { copyTooltip.innerText = originalText; copyTooltip.style.opacity = ""; }, 2000);
           });
         }
       };
