@@ -85,7 +85,6 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    // 1. TYPEWRITER (Safe substring logic)
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -100,24 +99,27 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
-    // 2. CURSOR & BG GLOW
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
 
-    window.onmousemove = (e) => {
-        const { clientX: x, clientY: y } = e;
-        if (dot && outline) {
-            dot.style.left = `${x}px`;
-            dot.style.top = `${y}px`;
-            outline.animate({ left: `${x}px`, top: `${y}px` }, { duration: 500, fill: "forwards" });
-        }
-        if (bgGlow) {
-            bgGlow.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(18, 168, 156, 0.12), transparent 80%)`;
-        }
-    };
+    // PERFORMANCE FIX: Only run mouse logic if pointer is used
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (!isTouchDevice) {
+        window.onmousemove = (e) => {
+            const { clientX: x, clientY: y } = e;
+            if (dot && outline) {
+                dot.style.left = `${x}px`;
+                dot.style.top = `${y}px`;
+                outline.animate({ left: `${x}px`, top: `${y}px` }, { duration: 500, fill: "forwards" });
+            }
+            if (bgGlow) {
+                bgGlow.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(18, 168, 156, 0.12), transparent 80%)`;
+            }
+        };
+    }
 
-    // 3. SKILLS TOGGLE
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const arrow = document.getElementById('arrow-icon');
@@ -128,7 +130,6 @@ import '../styles/card.css';
         };
     }
 
-    // 4. DARK MODE WARNING
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
@@ -149,7 +150,6 @@ import '../styles/card.css';
         });
     }
 
-    // 5. REVEAL
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
