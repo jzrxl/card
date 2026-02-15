@@ -21,51 +21,22 @@ import '../styles/card.css';
     </div>
 
     <div class="card-container">
+        <button id="open-skills" class="drawer-trigger" title="View Skills">
+            <i class="bi bi-chevron-compact-right"></i>
+        </button>
+
         <div class="descripcion">
             <div class="name-status">
                 <h1>{name}</h1>
                 <span class="status-pulse" title="Available for work"></span>
             </div>
             <h2>{position}</h2>
-            
             <p set:html={aboutMe}></p>
-
-            <div class="tech-stack">
-                <span class="tag">Computer Hardware</span>
-                <span class="tag">Windows Installation</span>
-                <span class="tag">Networking</span>
-                <span class="tag">Software Applications</span>
-                <span class="tag">Troubleshooting</span>
-                <span class="tag">System Configuration</span>
-                <span class="tag">Operating System</span>
-                <span class="tag">LAN Setup</span>
-                <span class="tag">Connectivity Troubleshooting</span>
-                <span class="tag">Device Setup</span>
-                <span class="tag">Performance Optimization</span>
-                <span class="tag">Technical Support</span>
-                <span class="tag">Computer Systems</span>
-                <span class="tag">Basic Hardware</span>
-            </div>
             
             <div class="icons">
-                {facebook && (
-                    <a href={facebook} class="hover-text" target="_blank">
-                        <span class="tooltip-text">Facebook</span>
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                )}
-                {github && (
-                    <a href={github} class="hover-text" target="_blank">
-                        <span class="tooltip-text">GitHub</span>
-                        <i class="bi bi-github"></i>
-                    </a>
-                )}
-                {linkedin && (
-                    <a href={linkedin} class="hover-text" target="_blank">
-                        <span class="tooltip-text">LinkedIn</span>
-                        <i class="bi bi-linkedin"></i>
-                    </a>
-                )}
+                {facebook && <a href={facebook} class="hover-text" target="_blank"><span class="tooltip-text">Facebook</span><i class="bi bi-facebook"></i></a>}
+                {github && <a href={github} class="hover-text" target="_blank"><span class="tooltip-text">GitHub</span><i class="bi bi-github"></i></a>}
+                {linkedin && <a href={linkedin} class="hover-text" target="_blank"><span class="tooltip-text">LinkedIn</span><i class="bi bi-linkedin"></i></a>}
                 {cvLink && (
                     <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
                         <span class="tooltip-text" id="cv-tooltip">Resume</span>
@@ -84,41 +55,63 @@ import '../styles/card.css';
             <img src={profileImage} alt={name}>
         </div>
     </div>
+
+    <div id="skills-drawer" class="skills-drawer">
+        <button id="close-skills" class="close-drawer">&times;</button>
+        <h3>Technical Skills</h3>
+        <div class="tech-stack-drawer">
+            <span class="tag">Hardware</span>
+            <span class="tag">Windows</span>
+            <span class="tag">Networking</span>
+            <span class="tag">Software</span>
+            <span class="tag">Troubleshooting</span>
+            <span class="tag">SysConfig</span>
+            <span class="tag">OS</span>
+            <span class="tag">LAN</span>
+            <span class="tag">Connectivity</span>
+            <span class="tag">Device Setup</span>
+            <span class="tag">Optimization</span>
+            <span class="tag">IT Support</span>
+            <span class="tag">Systems</span>
+        </div>
+    </div>
 </div>
 
 <script>
-  // This block removes the red squiggles for 'umami'
-  declare global {
-    interface Window {
-      umami: any;
-    }
-  }
+  declare global { interface Window { umami: any; } }
 
   function initAll() {
-    // --- 1. CUSTOM CURSOR LOGIC ---
+    // --- 1. DRAWER LOGIC ---
+    const openDrawer = document.getElementById('open-skills');
+    const closeDrawer = document.getElementById('close-skills');
+    const drawer = document.getElementById('skills-drawer');
+
+    if (openDrawer && closeDrawer && drawer) {
+        openDrawer.onclick = () => {
+            drawer.classList.add('active');
+            if (window.umami) window.umami.track('Skills Drawer Opened');
+        };
+        closeDrawer.onclick = () => drawer.classList.remove('active');
+    }
+
+    // --- 2. CURSOR LOGIC ---
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
-    const hoverables = document.querySelectorAll('a, .copy-email-btn, #cv-download-link, button');
+    const hoverables = document.querySelectorAll('a, .copy-email-btn, button');
 
     if (dot && outline) {
         window.onmousemove = (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-            dot.style.left = `${posX}px`;
-            dot.style.top = `${posY}px`;
-            outline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+            dot.style.left = `${e.clientX}px`;
+            dot.style.top = `${e.clientY}px`;
+            outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
         };
-
         hoverables.forEach(el => {
             el.addEventListener('mouseenter', () => outline.classList.add('cursor-hover'));
             el.addEventListener('mouseleave', () => outline.classList.remove('cursor-hover'));
         });
     }
 
-    // --- 2. INTERACTION LOGIC ---
+    // --- 3. OTHER LOGIC ---
     const copyBtn = document.querySelector('.copy-email-btn');
     const copyTooltip = document.getElementById('copy-tooltip');
     if (copyBtn instanceof HTMLElement && copyTooltip) {
@@ -147,10 +140,9 @@ import '../styles/card.css';
         };
     }
 
-    // --- 3. FORCE DARK DETECTION ---
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
-    if (localStorage.getItem('hideForceDarkWarning') === 'true') return;
+    if (localStorage.getItem('hideForceDarkWarning') === 'true' || !warning) return;
 
     const canary = document.createElement('div');
     canary.style.backgroundColor = 'rgb(255, 255, 255)';
@@ -159,20 +151,16 @@ import '../styles/card.css';
     document.body.appendChild(canary);
 
     setTimeout(() => {
-      const computedBg = window.getComputedStyle(canary).backgroundColor;
-      if (computedBg !== 'rgb(255, 255, 255)' && warning) {
+      if (window.getComputedStyle(canary).backgroundColor !== 'rgb(255, 255, 255)') {
         warning.style.display = 'flex';
-        if (window.umami) window.umami.track('Force Dark Detected');
       }
       document.body.removeChild(canary);
     }, 500);
 
-    if (closeBtn && warning) {
-        closeBtn.onclick = () => {
-            warning.style.display = 'none';
-            localStorage.setItem('hideForceDarkWarning', 'true');
-        };
-    }
+    if (closeBtn) closeBtn.onclick = () => {
+        warning.style.display = 'none';
+        localStorage.setItem('hideForceDarkWarning', 'true');
+    };
   }
 
   initAll();
