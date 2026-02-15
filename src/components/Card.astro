@@ -96,7 +96,7 @@ import '../styles/card.css';
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     
-    // --- Starfield Logic (Attraction & Elastic) ---
+    // --- Starfield (Magnetic Attraction) ---
     if (canvas) {
         const ctx = canvas.getContext('2d')!;
         let particles: any[] = [];
@@ -143,12 +143,12 @@ import '../styles/card.css';
                     this.y += directionY * 0.2;
                 } else {
                     if (this.x !== this.baseX) {
-                        let dx = this.x - this.baseX;
-                        this.x -= dx / 25;
+                        let dxBack = this.x - this.baseX;
+                        this.x -= dxBack / 25;
                     }
                     if (this.y !== this.baseY) {
-                        let dy = this.y - this.baseY;
-                        this.y -= dy / 25;
+                        let dyBack = this.y - this.baseY;
+                        this.y -= dyBack / 25;
                     }
                 }
             }
@@ -196,7 +196,7 @@ import '../styles/card.css';
         setTimeout(type, 400);
     }
 
-    // --- Toggle Skills (Text and Arrow Fix) ---
+    // --- Toggle Skills ---
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
@@ -205,13 +205,11 @@ import '../styles/card.css';
         toggleBtn.addEventListener('click', () => {
             const isOpening = panel.classList.toggle('active');
             toggleBtn.classList.toggle('is-open');
-            
-            // Toggle text based on state
-            ctaText.textContent = isOpening ? "Hide" : "Click to view my skills";
+            ctaText.textContent = isOpening ? "Hide my skills" : "Click to view my skills";
         });
     }
 
-    // --- Copy Email ---
+    // --- Email Copy ---
     const copyBtn = document.querySelector('.copy-email-btn');
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
