@@ -93,18 +93,17 @@ import '../styles/card.css';
 <script>
   function initAll() {
     console.clear();
-    console.log("%cHey there🙋‍♂️", "font-weight:bold; font-size:24px; color:#12a89c; text-shadow: 2px 2px 0px #024945;");
+    console.log("%cHey there🙋‍♂️", "font-weight:bold; font-size:24px; color:#00f2ff; text-shadow: 2px 2px 0px #00666b;");
 
     const canvas = document.getElementById('starCanvas') as HTMLCanvasElement;
-    const titleEl = document.getElementById('typewriter-title');
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     
-    // --- Dynamic Space Starfield ---
+    // --- Starfield with Permanent Displacement ---
     if (canvas) {
         const ctx = canvas.getContext('2d')!;
         let particles: any[] = [];
-        const mouse = { x: -1000, y: -1000, radius: 120 };
+        const mouse = { x: -1000, y: -1000, radius: 130 };
 
         const resize = () => {
             canvas.width = window.innerWidth;
@@ -114,49 +113,47 @@ import '../styles/card.css';
 
         class Particle {
             x: number; y: number; size: number; density: number;
-            vx: number; vy: number; // Velocity for drift
+            vx: number; vy: number;
 
             constructor(x: number, y: number) {
                 this.x = x; this.y = y;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.density = (Math.random() * 20) + 2;
-                // Very slow drift speed
-                this.vx = (Math.random() - 0.5) * 0.2;
-                this.vy = (Math.random() - 0.5) * 0.2;
+                this.size = Math.random() * 1.8 + 0.3;
+                this.density = (Math.random() * 25) + 2;
+                this.vx = (Math.random() - 0.5) * 0.15;
+                this.vy = (Math.random() - 0.5) * 0.15;
             }
             draw() {
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
             update() {
-                // Apply constant slow drift
-                this.x += this.vx;
-                this.y += this.vy;
+                // Apply constant drift
+                this.x += this.vx; this.y += this.vy;
 
-                // Wrap around edges
+                // Screen wrap logic
                 if (this.x < 0) this.x = canvas.width;
                 if (this.x > canvas.width) this.x = 0;
                 if (this.y < 0) this.y = canvas.height;
                 if (this.y > canvas.height) this.y = 0;
 
-                // Mouse Repulsion (Magnet)
+                // Permanent Displacement logic
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance < mouse.radius) {
                     let force = (mouse.radius - distance) / mouse.radius;
-                    let directionX = (dx / distance) * force * this.density;
-                    let directionY = (dy / distance) * force * this.density;
-                    this.x -= directionX;
-                    this.y -= directionY;
+                    let pushX = (dx / distance) * force * this.density;
+                    let pushY = (dy / distance) * force * this.density;
+                    this.x -= pushX;
+                    this.y -= pushY;
                 }
             }
         }
 
         function initParticles() {
             particles = [];
-            const numberOfParticles = (canvas.width * canvas.height) / 9000;
+            const numberOfParticles = (canvas.width * canvas.height) / 9500;
             for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
             }
@@ -171,6 +168,7 @@ import '../styles/card.css';
         window.addEventListener('resize', resize);
         resize(); animate();
 
+        // Mouse Move Handler for Cursor and Stars
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX; mouse.y = e.clientY;
             if (dot && outline) {
@@ -178,20 +176,25 @@ import '../styles/card.css';
                 outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
             }
         });
+
+        // Hover effect for interactive elements
+        const targets = document.querySelectorAll('a, button, .social-icon, .tag');
+        targets.forEach(t => {
+            t.addEventListener('mouseenter', () => outline.classList.add('hovering'));
+            t.addEventListener('mouseleave', () => outline.classList.remove('hovering'));
+        });
     }
 
-    // --- Typewriter ---
+    // --- Typewriter & Toggle (Simplified for readability) ---
+    const titleEl = document.getElementById('typewriter-title');
     if (titleEl) {
         const text = titleEl.getAttribute('data-text') || "";
         titleEl.textContent = ""; 
         let i = 0;
-        function type() {
-            if (i < text.length) { titleEl.textContent += text.charAt(i); i++; setTimeout(type, 85); }
-        }
+        function type() { if (i < text.length) { titleEl.textContent += text.charAt(i++); setTimeout(type, 85); } }
         setTimeout(type, 400);
     }
 
-    // --- Copy Email ---
     const copyBtn = document.querySelector('.copy-email-btn');
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
@@ -205,7 +208,6 @@ import '../styles/card.css';
         });
     }
 
-    // --- Toggle Skills ---
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const ctaText = document.getElementById('cta-text');
