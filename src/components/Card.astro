@@ -37,10 +37,10 @@ import '../styles/card.css';
                     </a>
                 )}
                 {cvLink && (
-                    <div id="view-cv-btn" class="hover-text" style="cursor:pointer;">
-                        <span class="tooltip-text">View Resume</span>
-                        <i class="bi bi-file-earmark-person"></i>
-                    </div>
+                    <a href={cvLink} id="cv-download-link" class="hover-text" target="_blank">
+                        <span class="tooltip-text" id="cv-tooltip">Resume</span>
+                        <i class="bi bi-file-earmark-arrow-down"></i>
+                    </a>
                 )}
                 {email && (
                     <div class="hover-text copy-email-btn" data-email={email}>
@@ -54,29 +54,14 @@ import '../styles/card.css';
             <img src={profileImage} alt={name}>
         </div>
     </div>
-
-    <div id="pdf-modal" class="pdf-modal">
-        <div class="pdf-content">
-            <button id="close-pdf" class="pdf-close-btn">Back to Portfolio</button>
-            <div class="pdf-wrapper">
-                <iframe 
-                    id="pdf-frame"
-                    src={`${cvLink}#toolbar=0&navpanes=0&scrollbar=0`} 
-                    title="Resume Preview"
-                    width="100%" 
-                    height="100%"
-                ></iframe>
-                <div class="pdf-protection-overlay"></div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
   function initAll() {
-    // --- 1. COPY EMAIL ---
+    // --- 1. COPY EMAIL LOGIC ---
     const copyBtn = document.querySelector('.copy-email-btn');
     const copyTooltip = document.getElementById('copy-tooltip');
+
     if (copyBtn instanceof HTMLElement && copyTooltip) {
       copyBtn.onclick = () => {
         const email = copyBtn.getAttribute('data-email');
@@ -84,37 +69,35 @@ import '../styles/card.css';
           navigator.clipboard.writeText(email).then(() => {
             const originalText = copyTooltip.innerText;
             copyTooltip.innerText = "Copied!";
-            setTimeout(() => { copyTooltip.innerText = originalText; }, 2000);
+            copyTooltip.style.opacity = "1";
+            setTimeout(() => {
+              copyTooltip.innerText = originalText;
+              copyTooltip.style.opacity = "";
+            }, 2000);
           });
         }
       };
     }
 
-    // --- 2. PDF MODAL LOGIC ---
-    const viewBtn = document.getElementById('view-cv-btn');
-    const pdfModal = document.getElementById('pdf-modal');
-    const closePdf = document.getElementById('close-pdf');
+    // --- 2. CV LOADING SPINNER ---
+    const cvLink = document.getElementById('cv-download-link');
+    const cvTooltip = document.getElementById('cv-tooltip');
 
-    if (viewBtn && pdfModal && closePdf) {
-        viewBtn.onclick = () => {
-            pdfModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+    if (cvLink instanceof HTMLElement && cvTooltip) {
+        cvLink.onclick = () => {
+            cvLink.classList.add('is-loading');
+            cvTooltip.innerText = "Preparing...";
+            setTimeout(() => {
+                cvLink.classList.remove('is-loading');
+                cvTooltip.innerText = "Resume";
+            }, 2000);
         };
-        closePdf.onclick = () => {
-            pdfModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        };
-    }
-
-    // Block Right Click on Overlay
-    const overlay = document.querySelector('.pdf-protection-overlay');
-    if (overlay) {
-        overlay.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
     // --- 3. FORCE DARK DETECTION ---
     const warning = document.getElementById('force-dark-warning');
-    const closeWarning = document.getElementById('close-warning');
+    const closeBtn = document.getElementById('close-warning');
+    
     if (localStorage.getItem('hideForceDarkWarning') === 'true') return;
 
     const canary = document.createElement('div');
@@ -124,20 +107,23 @@ import '../styles/card.css';
     document.body.appendChild(canary);
 
     setTimeout(() => {
-      if (window.getComputedStyle(canary).backgroundColor !== 'rgb(255, 255, 255)' && warning) {
+      const computedBg = window.getComputedStyle(canary).backgroundColor;
+      if (computedBg !== 'rgb(255, 255, 255)' && warning) {
         warning.style.display = 'flex';
+        warning.style.justifyContent = 'space-between';
       }
       document.body.removeChild(canary);
     }, 500);
 
-    if (closeWarning && warning) {
-        closeWarning.onclick = () => {
+    if (closeBtn && warning) {
+        closeBtn.onclick = () => {
             warning.style.display = 'none';
             localStorage.setItem('hideForceDarkWarning', 'true');
         };
     }
   }
 
+  // Initialize
   initAll();
   document.addEventListener('astro:after-swap', initAll);
 </script>
