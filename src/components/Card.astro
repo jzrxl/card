@@ -20,7 +20,7 @@ import '../styles/card.css';
                 </div>
                 
                 <div class="title-container">
-                    <h2 id="typewriter-title" class="typing" data-text={position}></h2>
+                    <h2 id="typewriter-title" data-text={position}></h2>
                 </div>
                 
                 <div class="about-container">
@@ -96,7 +96,7 @@ import '../styles/card.css';
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     
-    // --- Starfield: Attraction & Elastic Home ---
+    // --- Starfield Logic (Attraction & Elastic) ---
     if (canvas) {
         const ctx = canvas.getContext('2d')!;
         let particles: any[] = [];
@@ -115,9 +115,9 @@ import '../styles/card.css';
             constructor(x: number, y: number) {
                 this.x = x; this.y = y;
                 this.baseX = x; this.baseY = y;
-                this.size = Math.random() * 1.2 + 0.2; // Tiny dots
+                this.size = Math.random() * 1.2 + 0.2;
                 this.density = (Math.random() * 15) + 1;
-                this.vx = (Math.random() - 0.5) * 0.1; // Very slow drift
+                this.vx = (Math.random() - 0.5) * 0.1;
                 this.vy = (Math.random() - 0.5) * 0.1;
             }
             draw() {
@@ -125,7 +125,6 @@ import '../styles/card.css';
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
             update() {
-                // Background slow drift of the 'home' position
                 this.baseX += this.vx; this.baseY += this.vy;
                 if (this.baseX < 0) this.baseX = canvas.width;
                 if (this.baseX > canvas.width) this.baseX = 0;
@@ -137,17 +136,15 @@ import '../styles/card.css';
                 let distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance < mouse.radius) {
-                    // ATTRACTION logic: Move toward mouse
                     let force = (mouse.radius - distance) / mouse.radius;
                     let directionX = (dx / distance) * force * this.density;
                     let directionY = (dy / distance) * force * this.density;
                     this.x += directionX * 0.2; 
                     this.y += directionY * 0.2;
                 } else {
-                    // Return slowly to Base position
                     if (this.x !== this.baseX) {
                         let dx = this.x - this.baseX;
-                        this.x -= dx / 25; // Speed of returning home
+                        this.x -= dx / 25;
                     }
                     if (this.y !== this.baseY) {
                         let dy = this.y - this.baseY;
@@ -159,7 +156,6 @@ import '../styles/card.css';
 
         function initParticles() {
             particles = [];
-            // Higher divisor = fewer stars
             const numberOfParticles = (canvas.width * canvas.height) / 18000; 
             for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
@@ -196,15 +192,26 @@ import '../styles/card.css';
         const text = titleEl.getAttribute('data-text') || "";
         titleEl.textContent = ""; 
         let i = 0;
-        function type() { 
-            if (i < text.length) { 
-                titleEl.textContent += text.charAt(i++); 
-                setTimeout(type, 85); 
-            } 
-        }
+        function type() { if (i < text.length) { titleEl.textContent += text.charAt(i++); setTimeout(type, 85); } }
         setTimeout(type, 400);
     }
 
+    // --- Toggle Skills (Text and Arrow Fix) ---
+    const toggleBtn = document.getElementById('toggle-skills');
+    const panel = document.getElementById('skills-panel');
+    const ctaText = document.getElementById('cta-text');
+
+    if (toggleBtn && panel && ctaText) {
+        toggleBtn.addEventListener('click', () => {
+            const isOpening = panel.classList.toggle('active');
+            toggleBtn.classList.toggle('is-open');
+            
+            // Toggle text based on state
+            ctaText.textContent = isOpening ? "Hide my skills" : "Click to view my skills";
+        });
+    }
+
+    // --- Copy Email ---
     const copyBtn = document.querySelector('.copy-email-btn');
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
@@ -215,15 +222,6 @@ import '../styles/card.css';
                 copyBtn.setAttribute('data-tooltip', 'Copied!');
                 setTimeout(() => copyBtn.setAttribute('data-tooltip', originalTip || ""), 2000);
             }
-        });
-    }
-
-    const toggleBtn = document.getElementById('toggle-skills');
-    const panel = document.getElementById('skills-panel');
-    if (toggleBtn && panel) {
-        toggleBtn.addEventListener('click', () => {
-            panel.classList.toggle('active');
-            toggleBtn.classList.toggle('is-open');
         });
     }
   }
