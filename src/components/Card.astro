@@ -3,39 +3,30 @@ const {name, position, aboutMe, linkedin, github, facebook, email, cvLink, profi
 import '../styles/card.css';
 ---
 
+<canvas id="snowCanvas"></canvas>
 <div class="cursor-dot"></div>
 <div class="cursor-outline"></div>
 <div class="bg-glow"></div>
 
 <div class="container">
-    <div id="force-dark-warning" class="force-dark-msg">
-      <span>⚠️ Please disable "Force Dark Mode" for the best experience.</span>
-      <button id="close-warning" class="close-btn">&times;</button>
-    </div>
-
     <div class="main-wrapper reveal">
         <div class="card-container">
             <div class="descripcion">
-                <div class="name-status">
-                    <h1>{name}</h1>
-                </div>
-                
+                <h1>{name}</h1>
                 <div class="title-container">
                     <h2 id="typewriter-title" data-text={position}></h2>
                 </div>
-                
                 <p set:html={aboutMe}></p>
                 
                 <div class="social-footer">
                     <div class="icons">
-                        {facebook && <a href={facebook} class="social-icon" target="_blank" aria-label="Facebook"><i class="bi bi-facebook"></i><span class="tooltip">Facebook</span></a>}
-                        {github && <a href={github} class="social-icon" target="_blank" aria-label="GitHub"><i class="bi bi-github"></i><span class="tooltip">GitHub</span></a>}
-                        {linkedin && <a href={linkedin} class="social-icon" target="_blank" aria-label="LinkedIn"><i class="bi bi-linkedin"></i><span class="tooltip">LinkedIn</span></a>}
-                        {cvLink && <a href={cvLink} class="social-icon" target="_blank" aria-label="Resume"><i class="bi bi-file-earmark-arrow-down"></i><span class="tooltip">Resume</span></a>}
+                        {facebook && <a href={facebook} class="social-icon" target="_blank"><i class="bi bi-facebook"></i></a>}
+                        {github && <a href={github} class="social-icon" target="_blank"><i class="bi bi-github"></i></a>}
+                        {linkedin && <a href={linkedin} class="social-icon" target="_blank"><i class="bi bi-linkedin"></i></a>}
+                        {cvLink && <a href={cvLink} class="social-icon" target="_blank"><i class="bi bi-file-earmark-arrow-down"></i></a>}
                         {email && (
                             <div class="social-icon copy-email-btn" data-email={email} role="button">
                                 <i class="bi bi-envelope-at-fill"></i>
-                                <span class="tooltip">Copy Email</span>
                             </div>
                         )}
                     </div>
@@ -49,51 +40,124 @@ import '../styles/card.css';
         <div id="skills-panel" class="skills-panel">
             <div class="panel-inner">
                 <div class="tech-stack">
-                    <span class="tag">Hardware</span>
-                    <span class="tag">Windows</span>
-                    <span class="tag">Networking</span>
-                    <span class="tag">Software</span>
-                    <span class="tag">Troubleshooting</span>
-                    <span class="tag">SysConfig</span>
-                    <span class="tag">OS</span>
-                    <span class="tag">LAN</span>
-                    <span class="tag">Connectivity</span>
-                    <span class="tag">Device Setup</span>
-                    <span class="tag">Optimization</span>
-                    <span class="tag">IT Support</span>
-                    <span class="tag">Systems</span>
+                    <span class="tag">Hardware</span><span class="tag">Windows</span><span class="tag">Networking</span>
+                    <span class="tag">Software</span><span class="tag">Troubleshooting</span><span class="tag">OS</span>
+                    <span class="tag">LAN</span><span class="tag">Connectivity</span><span class="tag">IT Support</span>
                 </div>
             </div>
         </div>
 
         <div class="trigger-wrapper">
-            <button id="toggle-skills" class="skills-cta" aria-label="View Skills">
+            <button id="toggle-skills" class="skills-cta">
                 <i class="bi bi-chevron-down arrow-left"></i>
                 <span id="cta-text">Click to view my skills</span>
                 <i class="bi bi-chevron-down arrow-right"></i>
             </button>
         </div>
     </div>
-
-    <footer class="git-footer">
-        <code>git push origin main</code>
-    </footer>
 </div>
 
 <script>
   function initAll() {
-    // --- Zombo.com Easter Egg ---
-    const zomboStyle = "font-weight: bold; font-size: 20px; color: #12a89c; text-shadow: 2px 2px 0px #024945;";
-    const subStyle = "font-family: monospace; font-size: 12px; color: #888;";
-    
-    console.clear();
-    console.log("%cWelcome... to My Portfolio.", zomboStyle);
-    console.log("%cThis is Portfolio-com.", zomboStyle);
-    console.log("%cAnything is possible... at Portfolio-com.", subStyle);
-    console.log("%cThe only limit is yourself.", "color: white; background: #12a89c; padding: 2px 5px; border-radius: 3px;");
-    console.log("%cWelcome... to Portfolio-com.", zomboStyle);
+    // --- CANVAS SNOW LOGIC ---
+    const canvas = document.getElementById('snowCanvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    let particles: Particle[] = [];
+    const mouse = { x: -100, y: -100, radius: 100 };
 
-    // --- Typewriter ---
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      x: number; y: number; size: number; speedX: number; speedY: number;
+      baseX: number; baseY: number; density: number;
+
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 + 0.5; // Constant downward drift
+        this.density = (Math.random() * 20) + 1;
+      }
+
+      update() {
+        // Natural movement
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        // Reset if off screen
+        if (this.y > canvas.height) {
+          this.y = -10;
+          this.x = Math.random() * canvas.width;
+        }
+
+        // Mouse Repulsion
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance;
+        let forceDirectionY = dy / distance;
+        let maxDistance = mouse.radius;
+        let force = (maxDistance - distance) / maxDistance;
+        let directionX = forceDirectionX * force * this.density;
+        let directionY = forceDirectionY * force * this.density;
+
+        if (distance < mouse.radius) {
+          this.x -= directionX;
+          this.y -= directionY;
+        }
+      }
+
+      draw() {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < 150; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.x;
+      mouse.y = e.y;
+    });
+
+    resize();
+    initParticles();
+    animate();
+
+    // --- OTHER LOGIC (Typewriter/Toggle) ---
+    const toggleBtn = document.getElementById('toggle-skills');
+    const panel = document.getElementById('skills-panel');
+    const ctaText = document.getElementById('cta-text');
+    if (toggleBtn && panel && ctaText) {
+      toggleBtn.onclick = () => {
+        const isOpen = panel.classList.toggle('active');
+        toggleBtn.classList.toggle('is-open');
+        ctaText.textContent = isOpen ? "Hide my skills" : "Click to view my skills";
+      };
+    }
+
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -107,47 +171,6 @@ import '../styles/card.css';
         }
         setTimeout(type, 500);
     }
-
-    // --- Mouse & Glow ---
-    const dot = document.querySelector('.cursor-dot') as HTMLElement;
-    const outline = document.querySelector('.cursor-outline') as HTMLElement;
-    const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    if (!isTouch) {
-        window.onmousemove = (e) => {
-            const { clientX: x, clientY: y } = e;
-            if (dot && outline) {
-                dot.style.left = `${x}px`;
-                dot.style.top = `${y}px`;
-                outline.animate({ left: `${x}px`, top: `${y}px` }, { duration: 500, fill: "forwards" });
-            }
-            if (bgGlow) {
-                bgGlow.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(18, 168, 156, 0.15), transparent 80%)`;
-            }
-        };
-    }
-
-    // --- Toggle Logic ---
-    const toggleBtn = document.getElementById('toggle-skills');
-    const panel = document.getElementById('skills-panel');
-    const ctaText = document.getElementById('cta-text');
-    
-    if (toggleBtn && panel && ctaText) {
-        toggleBtn.onclick = () => {
-            const isOpen = panel.classList.toggle('active');
-            toggleBtn.classList.toggle('is-open');
-            ctaText.textContent = isOpen ? "Hide my skills" : "Click to view my skills";
-        };
-    }
-
-    // --- Reveal Animation ---
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('active');
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
 
   initAll();
