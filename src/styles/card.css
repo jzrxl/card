@@ -61,7 +61,7 @@
     width: 100%; max-height: 0; overflow: hidden;
     transition: max-height 0.4s ease-out;
 }
-.skills-panel.active { max-height: 300px; }
+.skills-panel.active { max-height: 350px; }
 .panel-inner { padding: 0 30px 20px 30px; }
 .tech-stack { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag {
@@ -70,11 +70,29 @@
     font-weight: 500;
 }
 
+/* PROFESSIONAL TEXT TOGGLE */
 .trigger-wrapper {
     width: 100%; display: flex; justify-content: center; 
-    border-radius: 0 0 12px 12px; padding: 8px 0;
+    border-radius: 0 0 12px 12px; padding: 12px 0; z-index: 2;
 }
-.arrow-btn { background: none; border: none; color: white; cursor: pointer; font-size: 22px; }
+.skills-cta {
+    background: none; border: none; color: white; cursor: pointer;
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; display: flex; align-items: center; gap: 12px;
+    opacity: 0.8; transition: 0.3s ease;
+}
+.skills-cta:hover { opacity: 1; gap: 16px; }
+
+.skills-cta i { font-size: 12px; transition: transform 0.4s ease; }
+.skills-cta.is-open i { transform: rotate(180deg); }
+
+/* Suble Pulse for arrows */
+.skills-cta i { animation: arrowPulse 2s infinite; }
+@keyframes arrowPulse {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+}
+.skills-cta.is-open i { animation: none; }
 
 .image { flex: 0.7; display: flex; justify-content: center; align-items: center; padding-right: 30px; }
 .image img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.2); }
@@ -89,8 +107,10 @@
 .git-footer { position: absolute; bottom: 15px; width: 100%; text-align: center; color: rgba(255, 255, 255, 0.1); font-size: 10px; }
 
 @media (max-width: 768px) {
+    .container { cursor: auto; }
+    .cursor-dot, .cursor-outline { display: none; }
     .main-wrapper { width: 92%; }
-    .card-container { flex-direction: column-reverse; }
+    .card-container { flex-direction: column-reverse; height: auto; }
     .image { padding: 20px 0 0 0; }
     .icons { justify-content: center; }
     .bg-glow { display: none; }

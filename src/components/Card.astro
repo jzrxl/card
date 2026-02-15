@@ -67,8 +67,10 @@ import '../styles/card.css';
         </div>
 
         <div class="trigger-wrapper">
-            <button id="toggle-skills" class="arrow-btn" aria-label="Toggle Skills">
-                <i class="bi bi-chevron-down" id="arrow-icon"></i>
+            <button id="toggle-skills" class="skills-cta" aria-label="View Skills">
+                <i class="bi bi-chevron-down arrow-left"></i>
+                <span id="cta-text">Click to view my skills</span>
+                <i class="bi bi-chevron-down arrow-right"></i>
             </button>
         </div>
     </div>
@@ -80,7 +82,6 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
-    // Typewriter
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -95,7 +96,6 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
-    // Mouse & Glow
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
@@ -115,18 +115,19 @@ import '../styles/card.css';
         };
     }
 
-    // Toggle Skills
+    // Toggle Logic with Text Change
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
-    const arrow = document.getElementById('arrow-icon');
-    if (toggleBtn && panel && arrow) {
+    const ctaText = document.getElementById('cta-text');
+    
+    if (toggleBtn && panel && ctaText) {
         toggleBtn.onclick = () => {
             const isOpen = panel.classList.toggle('active');
-            arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+            toggleBtn.classList.toggle('is-open');
+            ctaText.textContent = isOpen ? "Hide my skills" : "Click to view my skills";
         };
     }
 
-    // Dark Mode Detector (Surgical fix)
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
@@ -147,7 +148,6 @@ import '../styles/card.css';
         };
     }
 
-    // Reveal
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
