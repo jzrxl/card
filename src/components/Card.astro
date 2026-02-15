@@ -28,34 +28,14 @@ import '../styles/card.css';
                 
                 <div class="social-footer">
                     <div class="icons">
-                        {facebook && (
-                            <a href={facebook} class="icon-link" target="_blank" aria-label="Facebook">
-                                <i class="bi bi-facebook"></i>
-                                <span class="tooltip-text">Facebook</span>
-                            </a>
-                        )}
-                        {github && (
-                            <a href={github} class="icon-link" target="_blank" aria-label="GitHub">
-                                <i class="bi bi-github"></i>
-                                <span class="tooltip-text">GitHub</span>
-                            </a>
-                        )}
-                        {linkedin && (
-                            <a href={linkedin} class="icon-link" target="_blank" aria-label="LinkedIn">
-                                <i class="bi bi-linkedin"></i>
-                                <span class="tooltip-text">LinkedIn</span>
-                            </a>
-                        )}
-                        {cvLink && (
-                            <a href={cvLink} class="icon-link" target="_blank" aria-label="Download Resume">
-                                <i class="bi bi-file-earmark-arrow-down"></i>
-                                <span class="tooltip-text">Resume</span>
-                            </a>
-                        )}
+                        {facebook && <a href={facebook} class="social-icon" target="_blank" aria-label="Facebook"><i class="bi bi-facebook"></i><span class="tooltip">Facebook</span></a>}
+                        {github && <a href={github} class="social-icon" target="_blank" aria-label="GitHub"><i class="bi bi-github"></i><span class="tooltip">GitHub</span></a>}
+                        {linkedin && <a href={linkedin} class="social-icon" target="_blank" aria-label="LinkedIn"><i class="bi bi-linkedin"></i><span class="tooltip">LinkedIn</span></a>}
+                        {cvLink && <a href={cvLink} class="social-icon" target="_blank" aria-label="Resume"><i class="bi bi-file-earmark-arrow-down"></i><span class="tooltip">Resume</span></a>}
                         {email && (
-                            <div class="icon-link copy-email-btn" data-email={email} role="button" aria-label="Copy Email">
+                            <div class="social-icon copy-email-btn" data-email={email} role="button">
                                 <i class="bi bi-envelope-at-fill"></i>
-                                <span class="tooltip-text">Copy Email</span>
+                                <span class="tooltip">Copy Email</span>
                             </div>
                         )}
                     </div>
@@ -100,6 +80,7 @@ import '../styles/card.css';
 
 <script>
   function initAll() {
+    // Typewriter
     const titleEl = document.getElementById('typewriter-title');
     const text = titleEl?.getAttribute('data-text') || "";
     if (titleEl && titleEl.textContent === "") {
@@ -114,12 +95,13 @@ import '../styles/card.css';
         setTimeout(type, 500);
     }
 
+    // Mouse & Glow
     const dot = document.querySelector('.cursor-dot') as HTMLElement;
     const outline = document.querySelector('.cursor-outline') as HTMLElement;
     const bgGlow = document.querySelector('.bg-glow') as HTMLElement;
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
-    if (!isTouchDevice) {
+    if (!isTouch) {
         window.onmousemove = (e) => {
             const { clientX: x, clientY: y } = e;
             if (dot && outline) {
@@ -128,11 +110,12 @@ import '../styles/card.css';
                 outline.animate({ left: `${x}px`, top: `${y}px` }, { duration: 500, fill: "forwards" });
             }
             if (bgGlow) {
-                bgGlow.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(18, 168, 156, 0.12), transparent 80%)`;
+                bgGlow.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(18, 168, 156, 0.15), transparent 80%)`;
             }
         };
     }
 
+    // Toggle Skills
     const toggleBtn = document.getElementById('toggle-skills');
     const panel = document.getElementById('skills-panel');
     const arrow = document.getElementById('arrow-icon');
@@ -143,18 +126,19 @@ import '../styles/card.css';
         };
     }
 
-    // Surgical Dark Mode Check
+    // Dark Mode Detector (Surgical fix)
     const warning = document.getElementById('force-dark-warning');
     const closeBtn = document.getElementById('close-warning');
     if (warning && localStorage.getItem('hideForceDarkWarning') !== 'true') {
         const test = document.createElement('div');
-        test.style.cssText = "background-color: rgb(255, 255, 255); position: fixed; top: -100px;";
+        test.style.cssText = "background-color: #ffffff; color: #000000; position: fixed; top: -100px; opacity: 0;";
         document.body.appendChild(test);
         setTimeout(() => {
-            const actual = window.getComputedStyle(test).backgroundColor;
-            if (actual !== 'rgb(255, 255, 255)') warning.style.display = 'flex';
+            if (window.getComputedStyle(test).backgroundColor !== 'rgb(255, 255, 255)') {
+                warning.style.display = 'flex';
+            }
             document.body.removeChild(test);
-        }, 600);
+        }, 400);
     }
     if (closeBtn && warning) {
         closeBtn.onclick = () => {
@@ -163,6 +147,7 @@ import '../styles/card.css';
         };
     }
 
+    // Reveal
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) entry.target.classList.add('active');
