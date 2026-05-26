@@ -2,78 +2,79 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="404: Page Not Found" description="The page you are looking for does not exist.">
-    <div class="error-container">
-        <div class="error-content">
-            <h1 class="error-code">404</h1>
-            <div class="terminal-box">
-                <p class="terminal-text">> Hey, it seems that you made a mistake on the URL :)</p>
-            </div>
-            <a href="/" class="back-home-btn">
-                <i class="bi bi-house-door-fill"></i> Return Home
-            </a>
-        </div>
+<BaseLayout title="404 | Jezrel" description="Page not found.">
+  <div class="error-container">
+    <div class="error-content">
+      <p class="error-label">// 404</p>
+      <h1 class="error-code">Lost?</h1>
+      <p class="error-msg">That page doesn't exist or was moved.</p>
+      <a href="/" class="back-btn">← Back to home</a>
     </div>
+  </div>
 </BaseLayout>
 
 <style>
-    .error-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 90vh;
-        background-color: #131516;
-        color: white;
-        font-family: 'Lato', sans-serif;
-        text-align: center;
-        padding: 0 20px;
-    }
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-    .error-code {
-        font-size: 8rem;
-        margin: 0;
-        background: linear-gradient(to right, #024945, #12a89c);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 800;
-    }
+  .error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #060a0a;
+    padding: 24px;
+  }
 
-    .terminal-box {
-        background-color: #1c1f20;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 20px 0;
-        text-align: left;
-        border-left: 4px solid #12a89c;
-        max-width: 450px;
-        font-family: 'Courier New', Courier, monospace;
-    }
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
 
-    .terminal-text {
-        color: #12a89c;
-        margin: 5px 0;
-        font-size: 0.9rem;
-    }
+  .error-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #0ec4b8;
+    letter-spacing: 0.12em;
+    opacity: 0.8;
+  }
 
-    .back-home-btn {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 12px 25px;
-        background: linear-gradient(to right, #024945, #12a89c);
-        color: white;
-        text-decoration: none;
-        border-radius: 50px;
-        font-weight: 500;
-        transition: 0.3s;
-    }
+  .error-code {
+    font-family: 'Syne', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    margin: 0;
+    color: #f0fffe;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
 
-    .back-home-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(18, 168, 156, 0.3);
-    }
+  .error-msg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: rgba(240, 255, 254, 0.5);
+  }
 
-    @media (max-width: 576px) {
-        .error-code { font-size: 5rem; }
-        .terminal-text { font-size: 0.8rem; }
-    }
+  .back-btn {
+    margin-top: 8px;
+    padding: 10px 24px;
+    border: 1px solid rgba(14, 196, 184, 0.25);
+    border-radius: 20px;
+    color: rgba(240, 255, 254, 0.75);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .back-btn:hover {
+    color: #0ec4b8;
+    border-color: #0ec4b8;
+  }
+
+  @media (max-width: 400px) {
+    .error-code { font-size: 52px; }
+  }
 </style>

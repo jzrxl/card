@@ -1,5 +1,5 @@
 ---
-const {name, position, aboutMe, linkedin, github, facebook, email, cvLink, profileImage } = Astro.props;
+const { name, position, aboutMe, linkedin, github, facebook, email, cvLink, profileImage } = Astro.props;
 import '../styles/card.css';
 ---
 
@@ -8,205 +8,218 @@ import '../styles/card.css';
 <div class="cursor-outline"></div>
 
 <div class="container">
-    <div class="main-wrapper reveal">
-        <div class="card-container">
-            <div class="descripcion">
-                <div class="name-status">
-                    <h1>{name}</h1>
-                    <div class="status-indicator">
-                        <span class="status-dot"></span>
-                        <span class="status-pulse"></span>
-                    </div>
-                </div>
-                
-                <div class="title-container">
-                    <h2 id="typewriter-title" data-text={position}></h2>
-                </div>
-                
-                <div class="about-container">
-                    <p class="about-text" set:html={aboutMe}></p>
-                </div>
-                
-                <div class="social-footer">
-                    <div class="icons">
-                        {facebook && (
-                            <a href={facebook} class="social-icon" target="_blank" data-tooltip="Facebook">
-                                <i class="bi bi-facebook"></i>
-                            </a>
-                        )}
-                        {github && (
-                            <a href={github} class="social-icon" target="_blank" data-tooltip="GitHub">
-                                <i class="bi bi-github"></i>
-                            </a>
-                        )}
-                        {linkedin && (
-                            <a href={linkedin} class="social-icon" target="_blank" data-tooltip="LinkedIn">
-                                <i class="bi bi-linkedin"></i>
-                            </a>
-                        )}
-                        {cvLink && (
-                            <a href={cvLink} class="social-icon" target="_blank" data-tooltip="Resume">
-                                <i class="bi bi-file-earmark-arrow-down"></i>
-                            </a>
-                        )}
-                        {email && (
-                            <div class="social-icon copy-email-btn" data-email={email} role="button" data-tooltip="Click to Copy">
-                                <i class="bi bi-envelope-at-fill"></i>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-            <div class="image">
-                <div class="img-wrapper">
-                    <img src={profileImage} alt={name}>
-                </div>
-            </div>
+  <div class="main-wrapper">
+
+    <div class="card-container">
+      <div class="descripcion">
+
+        <div class="name-status">
+          <h1>{name}</h1>
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-pulse"></span>
+          </div>
         </div>
 
-        <div id="skills-panel" class="skills-panel">
-            <div class="panel-inner">
-                <div class="tech-stack">
-                    <span class="tag">Hardware</span>
-                    <span class="tag">Windows</span>
-                    <span class="tag">Networking</span>
-                    <span class="tag">Software</span>
-                    <span class="tag">Troubleshooting</span>
-                    <span class="tag">SysConfig</span>
-                    <span class="tag">OS</span>
-                    <span class="tag">LAN</span>
-                    <span class="tag">IT Support</span>
-                </div>
-            </div>
+        <div class="title-container">
+          <h2 id="typewriter-title" data-text={position}></h2>
         </div>
 
-        <div class="trigger-wrapper">
-            <button id="toggle-skills" class="skills-cta">
-                <i class="bi bi-chevron-down arrow-icon"></i>
-                <span id="cta-text">Click to view my skills</span>
-                <i class="bi bi-chevron-down arrow-icon"></i>
-            </button>
+        <div class="about-container">
+          <p class="about-text" set:html={aboutMe}></p>
         </div>
+
+        <div class="social-footer">
+          <div class="icons">
+            {facebook && (
+              <a href={facebook} class="social-icon" target="_blank" rel="noopener" data-tooltip="Facebook">
+                <i class="bi bi-facebook"></i>
+              </a>
+            )}
+            {github && (
+              <a href={github} class="social-icon" target="_blank" rel="noopener" data-tooltip="GitHub">
+                <i class="bi bi-github"></i>
+              </a>
+            )}
+            {linkedin && (
+              <a href={linkedin} class="social-icon" target="_blank" rel="noopener" data-tooltip="LinkedIn">
+                <i class="bi bi-linkedin"></i>
+              </a>
+            )}
+            {cvLink && (
+              <a href={cvLink} class="social-icon" target="_blank" rel="noopener" data-tooltip="Resume">
+                <i class="bi bi-file-earmark-person"></i>
+              </a>
+            )}
+            {email && (
+              <div class="social-icon copy-email-btn" data-email={email} role="button" tabindex="0" data-tooltip="Copy email">
+                <i class="bi bi-envelope"></i>
+              </div>
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="image">
+        <div class="img-wrapper">
+          <img src={profileImage} alt={`${name} profile photo`} loading="eager" />
+        </div>
+      </div>
     </div>
+
+    <div id="skills-panel" class="skills-panel">
+      <div class="panel-inner">
+        <p class="panel-label">// skills & tools</p>
+        <div class="tech-stack">
+          <span class="tag">Linux</span>
+          <span class="tag">Arch / CachyOS</span>
+          <span class="tag">Windows</span>
+          <span class="tag">Hardware</span>
+          <span class="tag">Networking</span>
+          <span class="tag">IT Support</span>
+          <span class="tag">Troubleshooting</span>
+          <span class="tag">Bash</span>
+          <span class="tag">Python</span>
+          <span class="tag">HTML / CSS</span>
+          <span class="tag">Astro</span>
+          <span class="tag">Git</span>
+          <span class="tag">Systemd</span>
+          <span class="tag">Remote Work</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="trigger-wrapper">
+      <button id="toggle-skills" class="skills-cta">
+        <i class="bi bi-chevron-down arrow-icon"></i>
+        <span id="cta-text">skills &amp; tools</span>
+        <i class="bi bi-chevron-down arrow-icon"></i>
+      </button>
+    </div>
+
+  </div>
 </div>
 
 <script>
-  function initAll() {
-    const canvas = document.getElementById('starCanvas') as HTMLCanvasElement;
-    const dot = document.querySelector('.cursor-dot') as HTMLElement;
-    const outline = document.querySelector('.cursor-outline') as HTMLElement;
-    
-    if (canvas) {
-        const ctx = canvas.getContext('2d')!;
-        let particles: any[] = [];
-        const mouse = { x: -1000, y: -1000, radius: 150 };
+function initAll() {
+  const canvas = document.getElementById('starCanvas') as HTMLCanvasElement | null;
+  const dot     = document.querySelector('.cursor-dot')     as HTMLElement | null;
+  const outline = document.querySelector('.cursor-outline') as HTMLElement | null;
 
-        const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles();
-        };
+  if (canvas) {
+    const ctx = canvas.getContext('2d')!;
+    let particles: Particle[] = [];
+    const mouse = { x: -9999, y: -9999, radius: 120 };
 
-        class Particle {
-            x: number; y: number; baseX: number; baseY: number;
-            size: number; density: number; vx: number; vy: number;
-            constructor(x: number, y: number) {
-                this.x = x; this.y = y;
-                this.baseX = x; this.baseY = y;
-                this.size = Math.random() * 1.2 + 0.2;
-                this.density = (Math.random() * 15) + 1;
-                this.vx = (Math.random() - 0.5) * 0.1;
-                this.vy = (Math.random() - 0.5) * 0.1;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-            }
-            update() {
-                this.baseX += this.vx; this.baseY += this.vy;
-                if (this.baseX < 0) this.baseX = canvas.width;
-                if (this.baseX > canvas.width) this.baseX = 0;
-                if (this.baseY < 0) this.baseY = canvas.height;
-                if (this.baseY > canvas.height) this.baseY = 0;
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
-                    let force = (mouse.radius - distance) / mouse.radius;
-                    let directionX = (dx / distance) * force * this.density;
-                    let directionY = (dy / distance) * force * this.density;
-                    this.x += directionX * 0.2; 
-                    this.y += directionY * 0.2;
-                } else {
-                    if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 25;
-                    if (this.y !== this.baseY) this.y -= (this.y - this.baseY) / 25;
-                }
-            }
+    class Particle {
+      x: number; y: number; bx: number; by: number;
+      size: number; density: number; vx: number; vy: number;
+      constructor(x: number, y: number) {
+        this.x = this.bx = x; this.y = this.by = y;
+        this.size    = Math.random() * 1 + 0.3;
+        this.density = Math.random() * 12 + 1;
+        this.vx      = (Math.random() - 0.5) * 0.08;
+        this.vy      = (Math.random() - 0.5) * 0.08;
+      }
+      draw() {
+        ctx.fillStyle = 'rgba(255,255,255,0.45)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      update() {
+        this.bx += this.vx; this.by += this.vy;
+        if (this.bx < 0) this.bx = canvas.width;
+        if (this.bx > canvas.width)  this.bx = 0;
+        if (this.by < 0) this.by = canvas.height;
+        if (this.by > canvas.height) this.by = 0;
+
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < mouse.radius && dist > 0) {
+          const f = (mouse.radius - dist) / mouse.radius;
+          this.x += (dx / dist) * f * this.density * 0.18;
+          this.y += (dy / dist) * f * this.density * 0.18;
+        } else {
+          this.x += (this.bx - this.x) / 22;
+          this.y += (this.by - this.y) / 22;
         }
-
-        function initParticles() {
-            particles = [];
-            const count = (canvas.width * canvas.height) / 18000; 
-            for (let i = 0; i < count; i++) particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-
-        window.addEventListener('resize', resize);
-        resize(); animate();
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX; mouse.y = e.clientY;
-            if (dot && outline) {
-                dot.style.left = `${e.clientX}px`; dot.style.top = `${e.clientY}px`;
-                outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
-            }
-        });
-        
-        const targets = document.querySelectorAll('a, button, .social-icon, .tag');
-        targets.forEach(t => {
-            t.addEventListener('mouseenter', () => outline.classList.add('hovering'));
-            t.addEventListener('mouseleave', () => outline.classList.remove('hovering'));
-        });
+      }
     }
 
-    const titleEl = document.getElementById('typewriter-title');
-    if (titleEl) {
-        const text = titleEl.getAttribute('data-text') || "";
-        titleEl.textContent = ""; 
-        let i = 0;
-        function type() { if (i < text.length) { titleEl.textContent += text.charAt(i++); setTimeout(type, 85); } }
-        setTimeout(type, 400);
-    }
+    const resize = () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      particles = [];
+      const n = Math.floor((canvas.width * canvas.height) / 16000);
+      for (let i = 0; i < n; i++)
+        particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+    };
 
-    const toggleBtn = document.getElementById('toggle-skills');
-    const panel = document.getElementById('skills-panel');
-    const ctaText = document.getElementById('cta-text');
-    if (toggleBtn && panel && ctaText) {
-        toggleBtn.addEventListener('click', () => {
-            const isOpening = panel.classList.toggle('active');
-            toggleBtn.classList.toggle('is-open');
-            ctaText.textContent = isOpening ? "Hide" : "Click to view my skills";
-        });
-    }
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animate);
+    };
 
-    const copyBtn = document.querySelector('.copy-email-btn');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', () => {
-            const email = copyBtn.getAttribute('data-email');
-            if (email) {
-                navigator.clipboard.writeText(email);
-                const originalTip = copyBtn.getAttribute('data-tooltip');
-                copyBtn.setAttribute('data-tooltip', 'Copied!');
-                setTimeout(() => copyBtn.setAttribute('data-tooltip', originalTip || ""), 2000);
-            }
-        });
-    }
+    window.addEventListener('resize', resize);
+    resize(); animate();
+
+    window.addEventListener('mousemove', e => {
+      mouse.x = e.clientX; mouse.y = e.clientY;
+      if (dot && outline) {
+        dot.style.left = `${e.clientX}px`;
+        dot.style.top  = `${e.clientY}px`;
+        outline.animate(
+          { left: `${e.clientX}px`, top: `${e.clientY}px` },
+          { duration: 450, fill: 'forwards' }
+        );
+      }
+    });
+
+    document.querySelectorAll('a, button, .social-icon, .tag').forEach(el => {
+      el.addEventListener('mouseenter', () => outline?.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => outline?.classList.remove('hovering'));
+    });
   }
-  initAll();
-  document.addEventListener('astro:after-swap', initAll);
+
+  const titleEl = document.getElementById('typewriter-title') as HTMLElement | null;
+  if (titleEl) {
+    const text = titleEl.getAttribute('data-text') ?? '';
+    titleEl.textContent = '';
+    let i = 0;
+    const type = () => {
+      if (i < text.length) { titleEl.textContent += text[i++]; setTimeout(type, 80); }
+    };
+    setTimeout(type, 350);
+  }
+
+  const toggleBtn = document.getElementById('toggle-skills');
+  const panel     = document.getElementById('skills-panel');
+  const ctaText   = document.getElementById('cta-text');
+  toggleBtn?.addEventListener('click', () => {
+    const opening = panel?.classList.toggle('active');
+    toggleBtn.classList.toggle('is-open');
+    if (ctaText) ctaText.textContent = opening ? 'hide' : 'skills & tools';
+  });
+
+  const copyBtn = document.querySelector('.copy-email-btn');
+  copyBtn?.addEventListener('click', () => {
+    const addr = copyBtn.getAttribute('data-email');
+    if (!addr) return;
+    navigator.clipboard.writeText(addr).then(() => {
+      const orig = copyBtn.getAttribute('data-tooltip') ?? 'Copy email';
+      copyBtn.setAttribute('data-tooltip', 'Copied!');
+      setTimeout(() => copyBtn.setAttribute('data-tooltip', orig), 2000);
+    });
+  });
+  copyBtn?.addEventListener('keydown', (e) => {
+    if ((e as KeyboardEvent).key === 'Enter') (copyBtn as HTMLElement).click();
+  });
+}
+
+initAll();
+document.addEventListener('astro:after-swap', initAll);
 </script>
