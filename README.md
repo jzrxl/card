@@ -2,7 +2,6 @@
 
 A personal portfolio card with interactive animations. Built with Astro.
 
-**Live**: [jezrelcrd.vercel.app](https://jezrelcrd.vercel.app)
 
 ## What's Inside
 
@@ -12,7 +11,7 @@ A personal portfolio card with interactive animations. Built with Astro.
 - Responsive design for mobile and desktop
 - Resume page
 
-## Tech Used
+## Tech Stack
 
 Astro, TypeScript, CSS, Bootstrap Icons
 
