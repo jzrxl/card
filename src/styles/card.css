@@ -123,6 +123,55 @@
   pointer-events: none;
 }
 
+/* source code button, sits on top right of the card */
+.source-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  color: rgba(240, 255, 254, 0.4);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(14, 196, 184, 0.15);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.source-btn:hover {
+  color: var(--teal-bright);
+  border-color: var(--teal-bright);
+  background: rgba(14, 196, 184, 0.08);
+}
+.source-btn::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(6, 10, 10, 0.9);
+  color: var(--teal-bright);
+  border: 1px solid var(--border);
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+.source-btn:hover::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0px);
+}
+
 .descripcion {
   flex: 1.4;
   display: flex;

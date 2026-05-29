@@ -11,6 +11,12 @@ import '../styles/card.css';
   <div class="main-wrapper">
 
     <div class="card-container">
+
+      <!-- source code button, top right corner of the card -->
+      <a href="https://github.com/jzrxl/card" target="_blank" rel="noopener" class="source-btn" data-tooltip="View source">
+        <i class="bi bi-code-slash"></i>
+      </a>
+
       <div class="descripcion">
 
         <div class="name-status">
@@ -105,7 +111,6 @@ import '../styles/card.css';
 
 <script>
 function initAll() {
-  // detect touch/mobile — skip canvas and cursor entirely
   const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   const canvas  = document.getElementById('starCanvas') as HTMLCanvasElement | null;
@@ -113,13 +118,11 @@ function initAll() {
   const outline = document.querySelector('.cursor-outline') as HTMLElement | null;
 
   if (isMobile) {
-    // hide canvas and cursors, restore default cursor
     if (canvas)  canvas.style.display  = 'none';
     if (dot)     dot.style.display     = 'none';
     if (outline) outline.style.display = 'none';
     document.body.style.cursor = 'auto';
   } else {
-    // desktop: run particles and custom cursor
     if (canvas) {
       const ctx = canvas.getContext('2d')!;
       let particles: Particle[] = [];
@@ -181,7 +184,6 @@ function initAll() {
       resize(); animate();
     }
 
-    // custom cursor only on desktop
     window.addEventListener('mousemove', e => {
       mouse.x = e.clientX; mouse.y = e.clientY;
       if (dot && outline) {
@@ -194,13 +196,12 @@ function initAll() {
       }
     });
 
-    document.querySelectorAll('a, button, .social-icon, .tag').forEach(el => {
+    document.querySelectorAll('a, button, .social-icon, .tag, .source-btn').forEach(el => {
       el.addEventListener('mouseenter', () => outline?.classList.add('hovering'));
       el.addEventListener('mouseleave', () => outline?.classList.remove('hovering'));
     });
   }
 
-  // typewriter runs on both
   const titleEl = document.getElementById('typewriter-title') as HTMLElement | null;
   if (titleEl) {
     const text = titleEl.getAttribute('data-text') ?? '';
@@ -212,7 +213,6 @@ function initAll() {
     setTimeout(type, 350);
   }
 
-  // skills toggle runs on both
   const toggleBtn = document.getElementById('toggle-skills');
   const panel     = document.getElementById('skills-panel');
   const ctaText   = document.getElementById('cta-text');
@@ -222,7 +222,6 @@ function initAll() {
     if (ctaText) ctaText.textContent = opening ? 'hide' : 'skills & tools';
   });
 
-  // copy email runs on both
   const copyBtn = document.querySelector('.copy-email-btn');
   copyBtn?.addEventListener('click', () => {
     const addr = copyBtn.getAttribute('data-email');
