@@ -5,7 +5,7 @@ A personal portfolio card with interactive animations. Built with Astro.
 
 ## What's Inside
 
-- Custom cursor with particle effects
+- Custom cursor with particle effects (cursor is exclusive to desktop for mobile optimization)
 - Animated typewriter title
 - Skills section you can expand/collapse
 - Responsive design for mobile and desktop
