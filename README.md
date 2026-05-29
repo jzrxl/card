@@ -28,7 +28,7 @@ Then open http://localhost:3000
 
 Edit `src/pages/index.astro` to change your name, position, bio, and links.
 
-You can change all the files in `public/files` to your liking. Files includes:
+You can change all the files in `public` to your liking. Files includes:
 - CV (pdf)
 - Profile Picture (webp)
 - Your own favicon
