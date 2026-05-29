@@ -2,13 +2,283 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Resume | Jezrel">
-  <div style="height: 100vh; display: flex; flex-direction: column;">
-    <iframe 
-      src="/files/jez_resume.pdf" 
-      width="100%" 
-      height="100%" 
-      style="border: none;">
-    </iframe>
+<BaseLayout title="Resume | Jezrel" description="Resume of Jezrel Palabrica — IT Support, Remote-Ready.">
+  <div class="resume-page">
+
+    <!-- for desktop -->
+    <div class="desktop-view">
+      <div class="resume-header">
+        <div class="header-left">
+          <a href="/" class="back-btn">
+            <i class="bi bi-arrow-left"></i> back
+          </a>
+          <div class="header-info">
+            <span class="header-name">Jezrel Palabrica</span>
+            <span class="header-sub">Resume</span>
+          </div>
+        </div>
+        <a href="/files/jez_resume.pdf" download class="download-btn">
+          <i class="bi bi-download"></i> Download PDF
+        </a>
+      </div>
+      <div class="iframe-wrapper">
+        <iframe
+          src="/files/jez_resume.pdf"
+          width="100%"
+          height="100%"
+          style="border: none;">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- mobile tweaks -->
+    <div class="mobile-view">
+      <div class="mobile-card">
+        <div class="mobile-glow"></div>
+        <p class="mobile-label">// resume</p>
+        <h1 class="mobile-name">Jezrel Palabrica</h1>
+        <p class="mobile-sub">IT Support · Remote-Ready</p>
+
+        <div class="mobile-actions">
+          <a href="/files/jez_resume.pdf" target="_blank" rel="noopener" class="action-btn primary">
+            <i class="bi bi-eye"></i>
+            View Resume
+          </a>
+          <a href="/files/jez_resume.pdf" download class="action-btn secondary">
+            <i class="bi bi-download"></i>
+            Download PDF
+          </a>
+        </div>
+
+        <a href="/" class="mobile-back">
+          <i class="bi bi-arrow-left"></i> back to portfolio
+        </a>
+      </div>
+    </div>
+
   </div>
 </BaseLayout>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
+
+  :root {
+    --teal-bright: #0ec4b8;
+    --bg:          #060a0a;
+    --surface:     #0c1514;
+    --surface-2:   #111e1d;
+    --border:      rgba(14, 196, 184, 0.14);
+    --text:        #f0fffe;
+    --text-muted:  rgba(240, 255, 254, 0.55);
+  }
+
+  .resume-page {
+    background-color: var(--bg);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* desktop layout */
+  .desktop-view {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .resume-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--teal-bright); }
+
+  .header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .header-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .header-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--teal-bright);
+    opacity: 0.8;
+  }
+
+  .download-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .download-btn:hover {
+    color: var(--teal-bright);
+    border-color: var(--teal-bright);
+  }
+
+  .iframe-wrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* hide mobile view on desktop */
+  .mobile-view { display: none; }
+
+  /* swap views on mobile */
+  @media (max-width: 768px) {
+    .desktop-view { display: none; }
+    .mobile-view {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+  }
+
+  /* mobile card */
+  .mobile-card {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    gap: 8px;
+  }
+
+  /* decorative glow blob - matching accent */
+  .mobile-glow {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14,196,184,0.1) 0%, transparent 70%);
+    top: -60px;
+    right: -40px;
+    pointer-events: none;
+  }
+
+  .mobile-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--teal-bright);
+    letter-spacing: 0.12em;
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .mobile-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 4px 0 0;
+    letter-spacing: -0.5px;
+  }
+
+  .mobile-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 0 0 16px;
+  }
+
+  .mobile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  /* filled teal button */
+  .action-btn.primary {
+    background: var(--teal-bright);
+    color: #060a0a;
+    border: 1px solid var(--teal-bright);
+  }
+  .action-btn.primary:hover {
+    background: #0dd4c7;
+    border-color: #0dd4c7;
+  }
+
+  /* ghost button */
+  .action-btn.secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .action-btn.secondary:hover {
+    color: var(--teal-bright);
+    border-color: var(--teal-bright);
+  }
+
+  .mobile-back {
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .mobile-back:hover { color: var(--teal-bright); }
+</style>
