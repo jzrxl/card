@@ -72,20 +72,22 @@ import '../styles/card.css';
       <div class="panel-inner">
         <p class="panel-label">// skills & tools</p>
         <div class="tech-stack">
-          <span class="tag">Linux</span>
-          <span class="tag">Arch / CachyOS</span>
-          <span class="tag">Windows</span>
-          <span class="tag">Hardware</span>
-          <span class="tag">Networking</span>
-          <span class="tag">IT Support</span>
-          <span class="tag">Troubleshooting</span>
-          <span class="tag">Bash</span>
+          <span class="tag">Arch Linux</span>
+          <span class="tag">CachyOS</span>
+          <span class="tag">Windows 10/11</span>
+          <span class="tag">Bash Scripting</span>
           <span class="tag">Python</span>
+          <span class="tag">Systemd</span>
+          <span class="tag">Proton / Wine</span>
+          <span class="tag">Hardware Diagnostics</span>
+          <span class="tag">Driver Troubleshooting</span>
+          <span class="tag">Networking</span>
           <span class="tag">HTML / CSS</span>
           <span class="tag">Astro</span>
-          <span class="tag">Git</span>
-          <span class="tag">Systemd</span>
-          <span class="tag">Remote Work</span>
+          <span class="tag">Git / GitHub</span>
+          <span class="tag">Written Communication</span>
+          <span class="tag">Remote Work Ready</span>
+          <span class="tag">QA / Data Entry</span>
         </div>
       </div>
     </div>
@@ -103,70 +105,83 @@ import '../styles/card.css';
 
 <script>
 function initAll() {
-  const canvas = document.getElementById('starCanvas') as HTMLCanvasElement | null;
+  // detect touch/mobile — skip canvas and cursor entirely
+  const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+  const canvas  = document.getElementById('starCanvas') as HTMLCanvasElement | null;
   const dot     = document.querySelector('.cursor-dot')     as HTMLElement | null;
   const outline = document.querySelector('.cursor-outline') as HTMLElement | null;
 
-  if (canvas) {
-    const ctx = canvas.getContext('2d')!;
-    let particles: Particle[] = [];
-    const mouse = { x: -9999, y: -9999, radius: 120 };
+  if (isMobile) {
+    // hide canvas and cursors, restore default cursor
+    if (canvas)  canvas.style.display  = 'none';
+    if (dot)     dot.style.display     = 'none';
+    if (outline) outline.style.display = 'none';
+    document.body.style.cursor = 'auto';
+  } else {
+    // desktop: run particles and custom cursor
+    if (canvas) {
+      const ctx = canvas.getContext('2d')!;
+      let particles: Particle[] = [];
+      const mouse = { x: -9999, y: -9999, radius: 120 };
 
-    class Particle {
-      x: number; y: number; bx: number; by: number;
-      size: number; density: number; vx: number; vy: number;
-      constructor(x: number, y: number) {
-        this.x = this.bx = x; this.y = this.by = y;
-        this.size    = Math.random() * 1 + 0.3;
-        this.density = Math.random() * 12 + 1;
-        this.vx      = (Math.random() - 0.5) * 0.08;
-        this.vy      = (Math.random() - 0.5) * 0.08;
-      }
-      draw() {
-        ctx.fillStyle = 'rgba(255,255,255,0.45)';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      update() {
-        this.bx += this.vx; this.by += this.vy;
-        if (this.bx < 0) this.bx = canvas.width;
-        if (this.bx > canvas.width)  this.bx = 0;
-        if (this.by < 0) this.by = canvas.height;
-        if (this.by > canvas.height) this.by = 0;
+      class Particle {
+        x: number; y: number; bx: number; by: number;
+        size: number; density: number; vx: number; vy: number;
+        constructor(x: number, y: number) {
+          this.x = this.bx = x; this.y = this.by = y;
+          this.size    = Math.random() * 1 + 0.3;
+          this.density = Math.random() * 12 + 1;
+          this.vx      = (Math.random() - 0.5) * 0.08;
+          this.vy      = (Math.random() - 0.5) * 0.08;
+        }
+        draw() {
+          ctx.fillStyle = 'rgba(255,255,255,0.45)';
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        update() {
+          this.bx += this.vx; this.by += this.vy;
+          if (this.bx < 0) this.bx = canvas.width;
+          if (this.bx > canvas.width)  this.bx = 0;
+          if (this.by < 0) this.by = canvas.height;
+          if (this.by > canvas.height) this.by = 0;
 
-        const dx = mouse.x - this.x;
-        const dy = mouse.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < mouse.radius && dist > 0) {
-          const f = (mouse.radius - dist) / mouse.radius;
-          this.x += (dx / dist) * f * this.density * 0.18;
-          this.y += (dy / dist) * f * this.density * 0.18;
-        } else {
-          this.x += (this.bx - this.x) / 22;
-          this.y += (this.by - this.y) / 22;
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius && dist > 0) {
+            const f = (mouse.radius - dist) / mouse.radius;
+            this.x += (dx / dist) * f * this.density * 0.18;
+            this.y += (dy / dist) * f * this.density * 0.18;
+          } else {
+            this.x += (this.bx - this.x) / 22;
+            this.y += (this.by - this.y) / 22;
+          }
         }
       }
+
+      const resize = () => {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        particles = [];
+        const n = Math.floor((canvas.width * canvas.height) / 16000);
+        for (let i = 0; i < n; i++)
+          particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+      };
+
+      const animate = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+      };
+
+      window.addEventListener('resize', resize);
+      resize(); animate();
     }
 
-    const resize = () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      particles = [];
-      const n = Math.floor((canvas.width * canvas.height) / 16000);
-      for (let i = 0; i < n; i++)
-        particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      requestAnimationFrame(animate);
-    };
-
-    window.addEventListener('resize', resize);
-    resize(); animate();
-
+    // custom cursor only on desktop
     window.addEventListener('mousemove', e => {
       mouse.x = e.clientX; mouse.y = e.clientY;
       if (dot && outline) {
@@ -185,6 +200,7 @@ function initAll() {
     });
   }
 
+  // typewriter runs on both
   const titleEl = document.getElementById('typewriter-title') as HTMLElement | null;
   if (titleEl) {
     const text = titleEl.getAttribute('data-text') ?? '';
@@ -196,6 +212,7 @@ function initAll() {
     setTimeout(type, 350);
   }
 
+  // skills toggle runs on both
   const toggleBtn = document.getElementById('toggle-skills');
   const panel     = document.getElementById('skills-panel');
   const ctaText   = document.getElementById('cta-text');
@@ -205,6 +222,7 @@ function initAll() {
     if (ctaText) ctaText.textContent = opening ? 'hide' : 'skills & tools';
   });
 
+  // copy email runs on both
   const copyBtn = document.querySelector('.copy-email-btn');
   copyBtn?.addEventListener('click', () => {
     const addr = copyBtn.getAttribute('data-email');
